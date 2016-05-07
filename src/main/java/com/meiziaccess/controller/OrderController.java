@@ -1,11 +1,11 @@
 package com.meiziaccess.controller;
 
 
-import com.meiziaccess.model.Order;
-import org.apache.tomcat.util.http.fileupload.IOUtils;
-import org.jboss.logging.Param;
+import com.meiziaccess.model.ItemMedia;
+import com.meiziaccess.model.ItemMediaRepository;
+import com.meiziaccess.model.OrderItemRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
@@ -14,14 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.FileSystem;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,18 +28,34 @@ public class OrderController {
     @Value("${configure.IPAdderss}")
     private String IPAddress;
 
+    @Autowired
+    private ItemMediaRepository itemMediaRepository;
+
+    @Autowired
+    private OrderItemRepository orderItemRepository;
+
     //订单PostAPI
     @RequestMapping(value = "/order", method = RequestMethod.POST, produces = "application/json;charset-UTF-8")
     @ResponseBody
-    public Map<String, Object> order(@RequestBody  Order ord){
+    public Map<String, Object> order(@RequestBody ItemMedia ord){
         Map<String, Object> order_return = new HashMap<>();
-        System.out.println(ord.getUuid() + ", " + ord.isEntire() + ", " + ord.getStarttime() + ", " + ord.getEndtime() + ", " + ord.getHighdef_video_path());
-        order_return.put("uuid", ord.getUuid());
-        order_return.put("url", IPAddress + "/media?id=1");
+        System.out.println(ord.getUuid() + ", " + ord.getIsEntire() + ", " + ord.getStarttime() + ", " + ord.getEndtime() + ", " + ord.getHighdef_video_path());
+        String url =  IPAddress + "/media?id=1";
+
+        //处理视频，修改链接和地址
+        ord.setStatus(1);
+        ord.setUrl(url);
+        ItemMedia itemMedia = itemMediaRepository.save(ord);
+
+        //返回字段
+        order_return.put("uuid", itemMedia.getUuid());
+        order_return.put("status", itemMedia.getStatus());
+        order_return.put("url", itemMedia.getUrl());
+
         return order_return;
     }
 
-    //视屏下载链接
+    //视频下载链接
     @RequestMapping(value = "/media", method = RequestMethod.GET)
     public ResponseEntity<InputStreamResource> downloadFile( Long id)
             throws IOException {

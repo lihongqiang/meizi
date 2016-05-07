@@ -1,0 +1,10 @@
+package com.meiziaccess.model;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+/**
+ * Created by user-u1 on 2016/5/7.
+ */
+public interface ItemMediaRepository extends JpaRepository<ItemMedia, Long> {
+
+}
