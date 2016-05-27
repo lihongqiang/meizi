@@ -1,5 +1,6 @@
 package com.meiziaccess.model;
 
+import javax.annotation.sql.DataSourceDefinition;
 import javax.persistence.*;
 
 /**
