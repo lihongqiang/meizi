@@ -72,7 +72,7 @@ public class UploadTool implements UploadToolInterface {
 
         Vector<String> outs;
         if(osName.equals("Windows")){
-            outs = execCmds("cmd /c dir " + floderPath);
+            outs = execCmds("cmd /c dir " + floderPath +" /a-d /b " );
         }else {
             outs = execCmds("/bin/ls -al" + floderPath);
         }
@@ -122,7 +122,7 @@ public class UploadTool implements UploadToolInterface {
 //    private UploadLogRepository uploadLogRepository;
 
     @Override
-    public boolean updateDatabase(String folderPath, UploadLogRepository uploadLogRepository) {
+    public boolean updateDatabase(String folderPath, String fileName, UploadLogRepository uploadLogRepository) {
 
         Map<String, String> map = new HashMap<>();
         //获取上架信息
@@ -134,8 +134,8 @@ public class UploadTool implements UploadToolInterface {
         }
 
         //修改数据库信息
-        UploadLog log = new UploadLog("dianshitai", new Date(),  "admin", "/home/derc/upload/xml",
-                "/home/derc/upload/video", folderPath, Double.parseDouble(map.get("price")), map.get("copyright"));
+        UploadLog log = new UploadLog("dianshitai", new Date(),  "admin", "/home/derc/upload/xml/"+fileName+".xml" ,
+                "/home/derc/upload/video/"+fileName+".mp4", folderPath, Double.parseDouble(map.get("price")), map.get("copyright"));
 //        log.setVendor_name("dianshitai");
 //        System.out.println(log.getVendor_name());
 //        log.setUpload_time(new Date());
@@ -150,8 +150,25 @@ public class UploadTool implements UploadToolInterface {
     }
 
     @Override
-    public boolean uploadFile(String folderPath) {
+    public boolean uploadFile(String folderPath, UploadLogRepository uploadLogRepository) {
 
-        return false;
+        //获取文件列表
+        Vector<String> outs;
+        outs = execCmds("cmd /c dir " + folderPath +" /a-d /b " );
+        System.out.println(outs.toString());
+        //上传文件
+
+        for(int i=0; i<outs.size(); i++){
+            String[] file = outs.get(i).split("\\.");
+            System.out.println(outs.get(i) + " " +file.length);
+            //判断是否是xml文件
+            if(file[file.length-1].equals("xml")){
+                //更新数据库
+                updateDatabase(folderPath, file[0], uploadLogRepository);
+                //上传文件
+                execCmds("pscp -P 10722 -pw pkulky201 " + folderPath + "\\" + outs.get(i) + " derc@192.105.180.15:/home/derc/upload/xml");
+            }
+        }
+        return true;
     }
 }

@@ -21,10 +21,10 @@ public interface UploadToolInterface  {
     public boolean checkFolder(String floderPath);
 
     //读取文件夹中的编目,素材文件列表和上架信息，修改数据库内容
-    public boolean updateDatabase(String floderPath, UploadLogRepository uploadLogRepository);
+    public boolean updateDatabase(String floderPath,  String fileName, UploadLogRepository uploadLogRepository);
 
     //执行shell脚本，上传文件，删除文件
-    public boolean uploadFile(String folderPath);
+    public boolean uploadFile(String folderPath, UploadLogRepository uploadLogRepository);
 
     //读取上架文件
     public  Map<String, String> readFile(String fileName);

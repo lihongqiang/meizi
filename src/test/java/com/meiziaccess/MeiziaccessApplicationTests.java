@@ -2,6 +2,7 @@ package com.meiziaccess;
 
 import com.meiziaccess.model.ItemMedia;
 import com.meiziaccess.model.ItemMediaRepository;
+import com.meiziaccess.service.UploadService;
 import com.meiziaccess.upload.UploadTool;
 import com.meiziaccess.upload.UploadToolInterface;
 import com.meiziaccess.uploadModel.UploadLog;
@@ -34,8 +35,8 @@ public class MeiziaccessApplicationTests {
 	public void test() throws Exception {
 
 		//测试修改数据库
-		UploadToolInterface tool = new UploadTool();
-		System.out.println(tool.updateDatabase("E:\\dianshitai", uploadLogRepository));
+//		UploadToolInterface tool = new UploadTool();
+//		System.out.println(tool.updateDatabase("E:\\dianshitai", uploadLogRepository));
 
 		//测试数据库连接
 //		Date date = new Date();
@@ -51,6 +52,9 @@ public class MeiziaccessApplicationTests {
 //		System.out.println(map.get("price"));
 //		System.out.println(map.get("copyright"));
 
+		//测试上传文件服务
+		UploadService uploadService = new UploadService();
+		uploadService.uploadXmlAndVideo("E:\\dianshitai", uploadLogRepository);
 	}
 
 
