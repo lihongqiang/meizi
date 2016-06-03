@@ -74,7 +74,7 @@ public class UploadTool implements UploadToolInterface {
         if(osName.equals("Windows")){
             outs = execCmds("cmd /c dir " + floderPath +" /a-d /b " );
         }else {
-            outs = execCmds("/bin/ls -al" + floderPath);
+            outs = execCmds("/bin/ls " + floderPath);
         }
         if(!outs.isEmpty()){
             return true;
@@ -133,18 +133,18 @@ public class UploadTool implements UploadToolInterface {
             return false;
         }
 
+        if(uploadLogRepository == null){
+            System.out.println("uploadLogRepository is null");
+        }
         //修改数据库信息
-        UploadLog log = new UploadLog("dianshitai", new Date(),  "admin", "/home/derc/upload/xml/"+fileName+".xml" ,
-                "/home/derc/upload/video/"+fileName+".mp4", folderPath, Double.parseDouble(map.get("price")), map.get("copyright"));
-//        log.setVendor_name("dianshitai");
-//        System.out.println(log.getVendor_name());
-//        log.setUpload_time(new Date());
-//        log.setUploader_name("admin");
-//        log.setXml_upload_path("/home/derc/upload/xml");            //xml上传路径
-//        log.setVideo_upload_path("/home/derc/upload/video");        //video上传路径
-//        log.setVendor_path(folderPath);                       //高码视频路径
-//        log.setVideo_price(Double.parseDouble(map.get("price")));
-//        log.setVideo_copyright(map.get("copyright"));
+        UploadLog log = new UploadLog("dianshitai",
+                                    new Date(),
+                                    "admin",
+                                    "/home/derc/upload/xml/"+fileName+".xml" ,          //xml上传路径
+                                    "/home/derc/upload/video/"+fileName+".mp4",         //video上传路径
+                                    folderPath,                                         //高码视频路径
+                                    Double.parseDouble(map.get("price")),   //价格
+                                    map.get("copyright"));
         uploadLogRepository.save(log);
         return true;
     }
@@ -152,23 +152,39 @@ public class UploadTool implements UploadToolInterface {
     @Override
     public boolean uploadFile(String folderPath, UploadLogRepository uploadLogRepository) {
 
+        //查看系统
+        String osName = getOSName();
         //获取文件列表
         Vector<String> outs;
-        outs = execCmds("cmd /c dir " + folderPath +" /a-d /b " );
-        System.out.println(outs.toString());
-        //上传文件
-
-        for(int i=0; i<outs.size(); i++){
-            String[] file = outs.get(i).split("\\.");
-            System.out.println(outs.get(i) + " " +file.length);
-            //判断是否是xml文件
-            if(file[file.length-1].equals("xml")){
-                //更新数据库
-                updateDatabase(folderPath, file[0], uploadLogRepository);
-                //上传文件
-                execCmds("pscp -P 10722 -pw pkulky201 " + folderPath + "\\" + outs.get(i) + " derc@192.105.180.15:/home/derc/upload/xml");
+        if(osName.equals("Windows")){
+            //上传文件
+            outs = execCmds("cmd /c dir " + folderPath +" /a-d /b " );
+            for(int i=0; i<outs.size(); i++){
+                String[] file = outs.get(i).split("\\.");
+                System.out.println(outs.get(i) + " " +file.length);
+                //判断是否是xml文件
+                if(file[file.length-1].equals("xml")){
+                    //更新数据库
+                    updateDatabase(folderPath, file[0], uploadLogRepository);
+                    //上传文件
+                    execCmds("pscp -P 10722 -pw pkulky201 " + folderPath + "\\" + outs.get(i) + " derc@162.105.180.15:/home/derc/upload/xml");
+                }
+            }
+        }else {
+            outs = execCmds("/bin/ls " + folderPath);
+            for(int i=0; i<outs.size(); i++){
+                String[] file = outs.get(i).split("\\.");
+                System.out.println(outs.get(i) + " " +file.length);
+                //判断是否是xml文件
+                if(file[file.length-1].equals("xml")){
+                    //更新数据库
+                    updateDatabase(folderPath, file[0], uploadLogRepository);
+                    //上传文件
+                    execCmds("scp -P 10722 " + folderPath + "/" + outs.get(i) + " derc@162.105.180.15:/home/derc/upload/xml");
+                }
             }
         }
+//        System.out.println(outs.toString());
         return true;
     }
 }

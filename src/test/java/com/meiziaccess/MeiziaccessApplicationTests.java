@@ -54,7 +54,8 @@ public class MeiziaccessApplicationTests {
 
 		//测试上传文件服务
 		UploadService uploadService = new UploadService();
-		uploadService.uploadXmlAndVideo("E:\\dianshitai", uploadLogRepository);
+//		uploadService.uploadXmlAndVideo("E:\\dianshitai", uploadLogRepository);
+		uploadService.uploadXmlAndVideo("/Users/lhq/Workspace/dianshitai", uploadLogRepository);
 	}
 
 
