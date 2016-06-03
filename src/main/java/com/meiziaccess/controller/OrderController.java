@@ -3,7 +3,6 @@ package com.meiziaccess.controller;
 
 import com.meiziaccess.model.ItemMedia;
 import com.meiziaccess.model.ItemMediaRepository;
-import com.meiziaccess.model.OrderItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
@@ -31,8 +30,6 @@ public class OrderController {
     @Autowired
     private ItemMediaRepository itemMediaRepository;
 
-    @Autowired
-    private OrderItemRepository orderItemRepository;
 
     //订单PostAPI
     @RequestMapping(value = "/order", method = RequestMethod.POST, produces = "application/json;charset-UTF-8")
