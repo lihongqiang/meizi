@@ -145,6 +145,7 @@ public class UploadTool implements UploadToolInterface {
                                     folderPath,                                         //高码视频路径
                                     Double.parseDouble(map.get("price")),   //价格
                                     map.get("copyright"));
+        log.setXml_trans_path("/home/derc/upload/xml_trans/"+fileName+new Date().getTime());
         uploadLogRepository.save(log);
         return true;
     }
@@ -161,7 +162,6 @@ public class UploadTool implements UploadToolInterface {
             outs = execCmds("cmd /c dir " + folderPath +" /a-d /b " );
             for(int i=0; i<outs.size(); i++){
                 String[] file = outs.get(i).split("\\.");
-                System.out.println(outs.get(i) + " " +file.length);
                 //判断是否是xml文件
                 if(file[file.length-1].equals("xml")){
                     //更新数据库
@@ -184,7 +184,6 @@ public class UploadTool implements UploadToolInterface {
                 }
             }
         }
-//        System.out.println(outs.toString());
         return true;
     }
 }
