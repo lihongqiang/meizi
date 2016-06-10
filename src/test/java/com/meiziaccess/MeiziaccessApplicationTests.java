@@ -52,10 +52,10 @@ public class MeiziaccessApplicationTests {
 //		System.out.println(map.get("price"));
 //		System.out.println(map.get("copyright"));
 
-		//测试上传文件服务
-		UploadService uploadService = new UploadService();
+//		//测试上传文件服务
+//		UploadService uploadService = new UploadService();
 //		uploadService.uploadXmlAndVideo("E:\\dianshitai", uploadLogRepository);
-		uploadService.uploadXmlAndVideo("/Users/lhq/Workspace/dianshitai", uploadLogRepository);
+////		uploadService.uploadXmlAndVideo("/Users/lhq/Workspace/dianshitai", uploadLogRepository);
 	}
 
 

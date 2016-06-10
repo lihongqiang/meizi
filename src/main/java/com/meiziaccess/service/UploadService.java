@@ -4,6 +4,7 @@ import com.meiziaccess.upload.UploadTool;
 import com.meiziaccess.upload.UploadToolInterface;
 import com.meiziaccess.uploadModel.UploadLogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 /**
@@ -12,8 +13,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class UploadService {
 
-    @Autowired
-    private static UploadLogRepository uploadLogRepository;
+//    @Autowired
+//    private  UploadLogRepository uploadLogRepository;
 
     UploadToolInterface tool = new UploadTool();
 
@@ -33,10 +34,10 @@ public class UploadService {
         return true;
     }
 
-    public static void main(String[] args){
-        //测试上传文件服务
-        UploadService uploadService = new UploadService();
+//    public static void main(String[] args){
+//        //测试上传文件服务
+//        UploadService uploadService = new UploadService();
 //        uploadService.uploadXmlAndVideo("E:\\dianshitai", uploadLogRepository);
-        uploadService.uploadXmlAndVideo("/Users/lhq/Workspace/dianshitai", uploadLogRepository);
-    }
+////        uploadService.uploadXmlAndVideo("/Users/lhq/Workspace/dianshitai", uploadLogRepository);
+//    }
 }

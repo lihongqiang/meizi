@@ -153,6 +153,11 @@ public class UploadTool implements UploadToolInterface {
     @Override
     public boolean uploadFile(String folderPath, UploadLogRepository uploadLogRepository) {
 
+        if(uploadLogRepository == null){
+            System.out.println("UploadLogRepository is null.");
+            return false;
+        }
+
         //查看系统
         String osName = getOSName();
         //获取文件列表
