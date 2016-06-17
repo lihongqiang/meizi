@@ -14,7 +14,7 @@ import java.util.concurrent.SynchronousQueue;
  */
 public class UploadTool implements UploadToolInterface {
 
-    public  static void main(String[] args){
+//    public  static void main(String[] args){
 //        String cmd = "cmd /c dir d:" ;
 //        UploadTool tool = new UploadTool();
 //        Vector<String> outs = tool.execCmds(cmd);
@@ -32,7 +32,7 @@ public class UploadTool implements UploadToolInterface {
 //        System.out.println(date.getTime());
 //        System.out.println("It is " + formatter.format(date.getTime()));
 
-    }
+//    }
 
     @Override
     public String getOSName() {
@@ -43,7 +43,7 @@ public class UploadTool implements UploadToolInterface {
 
     @Override
     public Vector<String> execCmds(String cmd) {
-        Vector<String> outs = new Vector<>();
+        Vector<String> outs = new Vector<String>();
         try {
             Process pro = Runtime.getRuntime().exec(cmd);
             pro.waitFor();
@@ -88,7 +88,7 @@ public class UploadTool implements UploadToolInterface {
      * 获取上架信息
      */
     public  Map<String, String> readFile(String fileName)  {
-        Map<String, String> map = new HashMap<>();
+        Map<String, String> map = new HashMap<String, String>();
         File file = new File(fileName);
         BufferedReader reader = null;
         try {
@@ -124,7 +124,7 @@ public class UploadTool implements UploadToolInterface {
     @Override
     public boolean updateDatabase(String folderPath, String fileName, UploadLogRepository uploadLogRepository) {
 
-        Map<String, String> map = new HashMap<>();
+        Map<String, String> map = new HashMap<String, String>();
         //获取上架信息
         try {
              map = readFile(folderPath + "/upload.txt");

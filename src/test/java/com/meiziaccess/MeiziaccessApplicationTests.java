@@ -1,5 +1,7 @@
 package com.meiziaccess;
 
+import com.meiziaccess.download.DownloadTool;
+import com.meiziaccess.download.DownloadToolInterface;
 import com.meiziaccess.model.ItemMedia;
 import com.meiziaccess.model.ItemMediaRepository;
 import com.meiziaccess.service.UploadService;
@@ -56,6 +58,10 @@ public class MeiziaccessApplicationTests {
 //		UploadService uploadService = new UploadService();
 //		uploadService.uploadXmlAndVideo("E:\\dianshitai", uploadLogRepository);
 ////		uploadService.uploadXmlAndVideo("/Users/lhq/Workspace/dianshitai", uploadLogRepository);
+
+		//测试下载服务
+		DownloadToolInterface downloadTool = new DownloadTool();
+		downloadTool.download();
 	}
 
 

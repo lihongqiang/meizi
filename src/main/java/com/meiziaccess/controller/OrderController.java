@@ -25,7 +25,7 @@ import java.util.Map;
 public class OrderController {
 
     @Value("${configure.IPAdderss}")
-    private String IPAddress;
+    private String IPAddress;           //当前服务器ip
 
     @Autowired
     private ItemMediaRepository itemMediaRepository;
@@ -35,7 +35,7 @@ public class OrderController {
     @RequestMapping(value = "/order", method = RequestMethod.POST, produces = "application/json;charset-UTF-8")
     @ResponseBody
     public Map<String, Object> order(@RequestBody ItemMedia ord){
-        Map<String, Object> order_return = new HashMap<>();
+        Map<String, Object> order_return = new HashMap<String, Object>();
         System.out.println(ord.getUuid() + ", " + ord.getIsEntire() + ", " + ord.getStarttime() + ", " + ord.getEndtime() + ", " + ord.getHighdef_video_path());
         String url =  IPAddress + "/media?id=1";
 

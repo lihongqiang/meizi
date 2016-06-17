@@ -29,7 +29,7 @@ import java.util.Date;
 
 
 @SpringBootApplication
-@EnableScheduling
+//@EnableScheduling
 public class MeiziaccessApplication  {
 
 	public static void main(String[] args) {
