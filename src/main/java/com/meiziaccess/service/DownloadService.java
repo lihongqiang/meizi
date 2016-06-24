@@ -10,13 +10,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class DownloadService {
 
-    DownloadToolInterface downloadTool;
+    DownloadToolInterface downloadTool = new DownloadTool();
 
     //    下载处理好的编目和订单文件
     public boolean downloadXmlAndOrder(){
-        if(downloadTool == null){
-            downloadTool = new DownloadTool();
-        }
         downloadTool.download();
         return true;
     }
