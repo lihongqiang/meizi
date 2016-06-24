@@ -41,7 +41,7 @@ public class MyScheduledTasks {
 //    定时下载处理后的编目和订单文件
     @Scheduled(fixedRate = 1000*3600*24)
     public void downLoadTasks(){
-        System.out.println("The time is now " + dateFormat.format(new Date()));
+        System.out.println("Run download task......The time is  " + dateFormat.format(new Date()));
         //测试上传文件服务
         if(downloadService == null){
             downloadService =  new DownloadService();
