@@ -35,6 +35,7 @@ public class MyScheduledTasks {
         }
 		uploadService.uploadXmlAndVideo("E:\\dianshitai", uploadLogRepository);
 //        uploadService.uploadXmlAndVideo("/Users/lhq/Workspace/dianshitai", uploadLogRepository);
+
     }
 
 //    定时下载处理后的编目和订单文件
