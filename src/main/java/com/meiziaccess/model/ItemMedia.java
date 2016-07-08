@@ -21,7 +21,7 @@ public class ItemMedia {
     private int uuid;
 
     @Column(name = "isEntire")
-    private int isEntire;
+    private Boolean isEntire;
 
     @Column(name = "starttime")
     private int starttime;
@@ -43,7 +43,7 @@ public class ItemMedia {
 
     public ItemMedia() {super();}
 
-    public ItemMedia(int uuid, int isEntire, int starttime, int endtime, String highdef_video_path, String format, int status, String url) {
+    public ItemMedia(int uuid, Boolean isEntire, int starttime, int endtime, String highdef_video_path, String format, int status, String url) {
         super();
         this.uuid = uuid;
         this.isEntire = isEntire;
@@ -63,11 +63,11 @@ public class ItemMedia {
         this.uuid = uuid;
     }
 
-    public int getIsEntire() {
+    public Boolean getIsEntire() {
         return isEntire;
     }
 
-    public void setIsEntire(int isEntire) {
+    public void setIsEntire(Boolean isEntire) {
         this.isEntire = isEntire;
     }
 

@@ -1,8 +1,10 @@
 package com.meiziaccess.upload;
 
+import com.meiziaccess.task.MyScheduledTasks;
 import com.meiziaccess.uploadModel.UploadLog;
 import com.meiziaccess.uploadModel.UploadLogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
@@ -14,25 +16,16 @@ import java.util.concurrent.SynchronousQueue;
  */
 public class UploadTool implements UploadToolInterface {
 
-//    public  static void main(String[] args){
-//        String cmd = "cmd /c dir d:" ;
-//        UploadTool tool = new UploadTool();
-//        Vector<String> outs = tool.execCmds(cmd);
-//        System.out.println(outs.toString());
+        /* upload variable*/
+    /*****************************************/
+    private  String upload_remote_path;
 
-//        UploadTool tool = new UploadTool();
-//        if(tool.checkFolder("D:")){
-//            System.out.println("不为空");
-//        }else{
-//            System.out.println("为空");
-//        }
+    private  String upload_vendor_name;
 
-//        Date date = new Date();
-//        SimpleDateFormat formatter = new SimpleDateFormat("E yyyy.MM.dd 'at' hh:mm:ss a zzz");
-//        System.out.println(date.getTime());
-//        System.out.println("It is " + formatter.format(date.getTime()));
+    private  String uploader_name;
 
-//    }
+    /****************************************/
+
 
     @Override
     public String getOSName() {
@@ -52,7 +45,6 @@ public class UploadTool implements UploadToolInterface {
             String line = null;
             while((line = read.readLine())!=null){
                 outs.add(line);
-                System.out.println(line);
             }
             //如果pro不为空，那么要清空
             if(null!=pro){
@@ -117,10 +109,6 @@ public class UploadTool implements UploadToolInterface {
         return map;
     }
 
-
-//    @Autowired
-//    private UploadLogRepository uploadLogRepository;
-
     @Override
     public boolean updateDatabase(String folderPath, String fileName, UploadLogRepository uploadLogRepository) {
 
@@ -137,21 +125,25 @@ public class UploadTool implements UploadToolInterface {
             System.out.println("uploadLogRepository is null");
         }
         //修改数据库信息
-        UploadLog log = new UploadLog("dianshitai",
+        UploadLog log = new UploadLog(upload_vendor_name,
                                     new Date(),
-                                    "admin",
-                                    "/home/derc/upload/xml/"+fileName+".xml" ,          //xml上传路径
-                                    "/home/derc/upload/video/"+fileName+".mp4",         //video上传路径
+                                    uploader_name,
+                                    upload_remote_path + "/xml/"+fileName+".xml" ,          //xml上传路径
+                                    upload_remote_path + "/video/"+fileName+".mp4",         //video上传路径
                                     folderPath,                                         //高码视频路径
                                     Double.parseDouble(map.get("price")),   //价格
                                     map.get("copyright"));
-        log.setXml_trans_path("/home/derc/upload/xml_trans/"+fileName+new Date().getTime());
+        log.setXml_trans_path(upload_remote_path + "/xml_trans/"+fileName+new Date().getTime());
         uploadLogRepository.save(log);
         return true;
     }
 
     @Override
-    public boolean uploadFile(String folderPath, UploadLogRepository uploadLogRepository) {
+    public boolean uploadFile(String folderPath, UploadLogRepository uploadLogRepository, String upload_remote_path, String upload_vendor_name, String uploader_name) {
+
+        this.upload_remote_path = upload_remote_path;
+        this.upload_vendor_name = upload_vendor_name;
+        this.uploader_name = uploader_name;
 
         if(uploadLogRepository == null){
             System.out.println("UploadLogRepository is null.");
@@ -171,10 +163,22 @@ public class UploadTool implements UploadToolInterface {
                 if(file[file.length-1].equals("xml")){
                     //更新数据库
                     updateDatabase(folderPath, file[0], uploadLogRepository);
-                    //上传文件
-                    execCmds("pscp -P 10722 -pw pkulky201 " + folderPath + "\\" + outs.get(i) + " derc@162.105.180.15:/home/derc/upload/xml");
+                    //上传xml文件
+                    execCmds("pscp -P 10722 -pw pkulky201 " + folderPath + "\\" + outs.get(i) + " derc@162.105.180.15:" + upload_remote_path + "/xml");
+                }else{
+                    if(outs.get(i).equals("upload.txt")){
+                        continue;
+                    }else{
+                        //上传视频
+                        execCmds("pscp -P 10722 -pw pkulky201 " + folderPath + "\\" + outs.get(i) + " derc@162.105.180.15:" + upload_remote_path + "/video");
+                    }
                 }
+                //删除文件
+                System.out.println("cmd /c del " + folderPath + "\\" + outs.get(i));
+                execCmds("cmd /c del " + folderPath + "\\" + outs.get(i));
             }
+            //删除upload.txt文件
+            execCmds("cmd /c del " + folderPath + "\\" + "upload.txt");
         }else {
             outs = execCmds("/bin/ls " + folderPath);
             for(int i=0; i<outs.size(); i++){
@@ -184,10 +188,22 @@ public class UploadTool implements UploadToolInterface {
                 if(file[file.length-1].equals("xml")){
                     //更新数据库
                     updateDatabase(folderPath, file[0], uploadLogRepository);
-                    //上传文件
-                    execCmds("scp -P 10722 " + folderPath + "/" + outs.get(i) + " derc@162.105.180.15:/home/derc/upload/xml");
+                    //上传xml文件
+                    execCmds("scp -P 10722 " + folderPath + "/" + outs.get(i) + " derc@162.105.180.15:" + upload_remote_path + "/xml");
+                }else{
+                    if(outs.get(i).equals("upload.txt")){
+                        continue;
+                    }else{
+                        //上传视频
+                        execCmds("scp -P 10722 " + folderPath + "/" + outs.get(i) + " derc@162.105.180.15:" + upload_remote_path + "/video");
+                    }
                 }
+                //删除文件
+                System.out.println("rm " + folderPath + "/" + outs.get(i));
+                execCmds("rm " + folderPath + "/" + outs.get(i));
             }
+            //删除upload.txt文件
+            execCmds("rm " + folderPath + "/" + "upload.txt");
         }
         return true;
     }

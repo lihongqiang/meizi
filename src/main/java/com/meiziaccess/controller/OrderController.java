@@ -30,7 +30,6 @@ public class OrderController {
     @Autowired
     private ItemMediaRepository itemMediaRepository;
 
-
     //订单PostAPI
     @RequestMapping(value = "/order", method = RequestMethod.POST, produces = "application/json;charset-UTF-8")
     @ResponseBody
@@ -43,6 +42,8 @@ public class OrderController {
         ord.setStatus(1);
         ord.setUrl(url);
         ItemMedia itemMedia = itemMediaRepository.save(ord);
+
+//        url = IPAddress + "/media?id=" +
 
         //返回字段
         order_return.put("uuid", itemMedia.getUuid());
@@ -73,44 +74,5 @@ public class OrderController {
                 .contentType(MediaType.parseMediaType("application/octet-stream"))
                 .body(new InputStreamResource(file.getInputStream()));
     }
-
-//    @RequestMapping(value="/media/", method=RequestMethod.GET)
-//    public void getDownload(Long id, HttpServletRequest request, HttpServletResponse response) {
-//
-//        // Get your file stream from wherever.
-//        String fullPath = "E:/" + id +".rmvb";
-//        File downloadFile = new File(fullPath);
-//
-//        String path = request.getContextPath();
-//        ServletContext context = request.getServletContext();
-//
-//        // get MIME type of the file
-//        String mimeType = context.getMimeType(fullPath);
-//        if (mimeType == null) {
-//            // set to binary type if MIME mapping not found
-//            mimeType = "application/octet-stream";
-//            System.out.println("context getMimeType is null");
-//        }
-//        System.out.println("MIME type: " + mimeType);
-//
-//        // set content attributes for the response
-//        response.setContentType(mimeType);
-//        response.setContentLength((int) downloadFile.length());
-//
-//        // set headers for the response
-//        String headerKey = "Content-Disposition";
-//        String headerValue = String.format("attachment; filename=\"%s\"",
-//                downloadFile.getName());
-//        response.setHeader(headerKey, headerValue);
-//
-//        // Copy the stream to the response's output stream.
-//        try {
-//            InputStream myStream = new FileInputStream(fullPath);
-//            IOUtils.copy(myStream, response.getOutputStream());
-//            response.flushBuffer();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
 
 }

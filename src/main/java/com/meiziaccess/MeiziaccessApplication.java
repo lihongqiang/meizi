@@ -29,22 +29,11 @@ import java.util.Date;
 
 
 @SpringBootApplication
-@EnableScheduling
+//@EnableScheduling
 public class MeiziaccessApplication  {
 
 	public static void main(String[] args) {
 		SpringApplication.run(MeiziaccessApplication.class, args);
 	}
 
-//	@Bean
-//	public TemplateResolver templateResolver(){
-//		TemplateResolver resolver = new ServletContextTemplateResolver();
-////		resolver.setResourceResolver(new SpringResourceResourceResolver());
-//		resolver.setPrefix("classpath:/pages/");
-//		resolver.setSuffix(".html");
-//		resolver.setTemplateMode("HTML5");
-//		resolver.setCharacterEncoding("UTF-8");
-////		resolver.setOrder(2);
-//		return resolver;
-//	}
 }

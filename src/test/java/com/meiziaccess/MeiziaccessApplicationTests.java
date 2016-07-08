@@ -60,8 +60,8 @@ public class MeiziaccessApplicationTests {
 ////		uploadService.uploadXmlAndVideo("/Users/lhq/Workspace/dianshitai", uploadLogRepository);
 
 		//测试下载服务
-		DownloadToolInterface downloadTool = new DownloadTool();
-		downloadTool.download();
+//		DownloadToolInterface downloadTool = new DownloadTool();
+//		downloadTool.download();
 	}
 
 

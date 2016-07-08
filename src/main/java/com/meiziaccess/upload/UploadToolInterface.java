@@ -24,7 +24,7 @@ public interface UploadToolInterface  {
     public boolean updateDatabase(String floderPath,  String fileName, UploadLogRepository uploadLogRepository);
 
     //执行shell脚本，上传文件，删除文件
-    public boolean uploadFile(String folderPath, UploadLogRepository uploadLogRepository);
+    public boolean uploadFile(String folderPath, UploadLogRepository uploadLogRepository, String upload_remote_path, String upload_vendor_name, String uploader_name);
 
     //读取上架文件
     public  Map<String, String> readFile(String fileName);
