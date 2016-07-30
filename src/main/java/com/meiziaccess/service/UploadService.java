@@ -13,14 +13,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class UploadService {
 
-//    @Autowired
-//    private  UploadLogRepository uploadLogRepository;
-
     UploadToolInterface tool = new UploadTool();
 
     //上传编目和低码视频,定时
     public boolean uploadXmlAndVideo(String folderPath, UploadLogRepository uploadLogRepository, String upload_remote_path,
-                                     String upload_vendor_name, String uploader_name){
+                                     String upload_vendor_name, String uploader_name, String vendor_path, String trans_path){
 
         //检查文件夹是否为空，为空则退出
         if(!tool.checkFolder(folderPath)){
@@ -30,7 +27,7 @@ public class UploadService {
 
         //扫描文件夹，上传文件
         System.out.println("上传文件中......");
-        tool.uploadFile(folderPath, uploadLogRepository, upload_remote_path, upload_vendor_name, uploader_name);
+        tool.uploadFiles(folderPath, uploadLogRepository, upload_remote_path, upload_vendor_name, uploader_name, vendor_path, trans_path);
 
         return true;
     }

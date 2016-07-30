@@ -45,10 +45,15 @@ public class MyScheduledTasks {
     @Value("${configure.upload.uploader_name}")
     private  String uploader_name;
 
+    @Value("${configure.local.vendor_path}")
+    private  String vendor_path;
+
+    @Value("${configure.upload.trans_path}")
+    private String trans_path;
     /****************************************/
 
 //    定时上传编目和低码视频文件
-    @Scheduled(fixedRate = 1000*3600*24)
+//    @Scheduled(fixedRate = 1000*3600*24)
     public void uploadTasks() {
         System.out.println("Execute Scheduled upload task. The time is " + dateFormat.format(new Date()));
 
@@ -68,16 +73,16 @@ public class MyScheduledTasks {
         System.out.println("uploader_name = " + download_remote_path);
 
 
-        uploadService.uploadXmlAndVideo(upload_local_path, uploadLogRepository, upload_remote_path, upload_vendor_name, uploader_name);
+        uploadService.uploadXmlAndVideo(upload_local_path, uploadLogRepository, upload_remote_path, upload_vendor_name, uploader_name, vendor_path, trans_path);
 
     }
 
 //    定时下载处理后的编目和订单文件
-//    @Scheduled(fixedRate = 1000*3600*24)
+    @Scheduled(fixedRate = 1000*3600*24)
     public void downLoadTasks(){
         System.out.println("Run download task. The time is  " + dateFormat.format(new Date()));
         System.out.println("download_remote_path is " + download_remote_path);
-        //测试上传文件服务
+        System.out.println("download_local_path is " + download_local_path);
         if(downloadService == null){
             downloadService =  new DownloadService();
         }
