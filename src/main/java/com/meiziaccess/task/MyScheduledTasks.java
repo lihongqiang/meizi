@@ -52,8 +52,10 @@ public class MyScheduledTasks {
     private String trans_path;
     /****************************************/
 
+
+
 //    定时上传编目和低码视频文件
-//    @Scheduled(fixedRate = 1000*3600*24)
+    @Scheduled(fixedRate = 1000*3600*24)
     public void uploadTasks() {
         System.out.println("Execute Scheduled upload task. The time is " + dateFormat.format(new Date()));
 
@@ -61,8 +63,6 @@ public class MyScheduledTasks {
         if(uploadService == null){
             uploadService =  new UploadService();
         }
-//		  uploadService.uploadXmlAndVideo("E:\\dianshitai", uploadLogRepository);
-//        uploadService.uploadXmlAndVideo("/Users/lhq/Workspace/dianshitai", uploadLogRepository);
 
         System.out.println("upload_remote_path = " + upload_remote_path);
         System.out.println("upload_vendor_name = " + upload_vendor_name);
@@ -71,7 +71,6 @@ public class MyScheduledTasks {
         System.out.println("upload_local_path = " + upload_local_path);
         System.out.println("download_local_path = " + download_local_path);
         System.out.println("uploader_name = " + download_remote_path);
-
 
         uploadService.uploadXmlAndVideo(upload_local_path, uploadLogRepository, upload_remote_path, upload_vendor_name, uploader_name, vendor_path, trans_path);
 
