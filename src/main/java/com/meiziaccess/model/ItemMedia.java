@@ -14,11 +14,11 @@ public class ItemMedia {
 
     @Id
     @GeneratedValue
-    private int id;
+    private Long id;
 
     //订单项ID
     @Column(name = "uuid")
-    private int uuid;
+    private Long uuid;
 
     @Column(name = "isEntire")
     private Boolean isEntire;
@@ -43,7 +43,7 @@ public class ItemMedia {
 
     public ItemMedia() {super();}
 
-    public ItemMedia(int uuid, Boolean isEntire, int starttime, int endtime, String highdef_video_path, String format, int status, String url) {
+    public ItemMedia(Long uuid, Boolean isEntire, int starttime, int endtime, String highdef_video_path, String format, int status, String url) {
         super();
         this.uuid = uuid;
         this.isEntire = isEntire;
@@ -55,11 +55,11 @@ public class ItemMedia {
         this.url = url;
     }
 
-    public int getUuid() {
+    public Long getUuid() {
         return uuid;
     }
 
-    public void setUuid(int uuid) {
+    public void setUuid(Long uuid) {
         this.uuid = uuid;
     }
 

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -36,14 +37,18 @@ public class OrderController {
     public Map<String, Object> order(@RequestBody ItemMedia ord){
         Map<String, Object> order_return = new HashMap<String, Object>();
         System.out.println(ord.getUuid() + ", " + ord.isIsEntire() + ", " + ord.getStarttime() + ", " + ord.getEndtime() + ", " + ord.getHighdef_video_path());
-        String url = "http://" + IPAddress + "/media?id=1";
+        String url = "http://" + IPAddress + "/media?id=" + ord.getUuid();
 
         //处理视频，修改链接和地址
         ord.setStatus(1);
         ord.setUrl(url);
-        ItemMedia itemMedia = itemMediaRepository.save(ord);
-
-//        url = IPAddress + "/media?id=" +
+        List<ItemMedia> list =  itemMediaRepository.findMediaByUuid(ord.getUuid());
+        ItemMedia itemMedia;
+        if(list.isEmpty()){
+            itemMedia = itemMediaRepository.save(ord);
+        }else{
+            itemMedia = list.get(0);
+        }
 
         //返回字段
         order_return.put("uuid", itemMedia.getUuid());
@@ -55,11 +60,15 @@ public class OrderController {
 
     //视频下载链接
     @RequestMapping(value = "/media", method = RequestMethod.GET)
-    public ResponseEntity<InputStreamResource> downloadFile( Long id)
+    public ResponseEntity<InputStreamResource> downloadFile( Long uuid)
             throws IOException {
         //生成相应的文件下载链接
 //        String filePath = "E:/" + 1 + ".rmvb";
-        String filePath = "/home/derc/video/" + id + ".rmvb";
+//        通过uuid查找高码视频路径
+        List<ItemMedia> list = itemMediaRepository.findMediaByUuid(uuid);
+
+//        String filePath = "/home/derc/video/" + id + ".rmvb";
+        String filePath = list.get(0).getHighdef_video_path();
         FileSystemResource file = new FileSystemResource(filePath);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
