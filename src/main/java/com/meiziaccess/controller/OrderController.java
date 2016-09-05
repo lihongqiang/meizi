@@ -66,9 +66,10 @@ public class OrderController {
 //        String filePath = "E:/" + 1 + ".rmvb";
 //        通过uuid查找高码视频路径
         List<ItemMedia> list = itemMediaRepository.findMediaByUuid(uuid);
-
-//        String filePath = "/home/derc/video/" + id + ".rmvb";
-        String filePath = list.get(0).getHighdef_video_path();
+        if(list.isEmpty()) return null;
+        ItemMedia itemMedia = list.get(0);
+        System.out.println(itemMedia.getHighdef_video_path()); //        String filePath = "/home/derc/video/" + id + ".rmvb";
+        String filePath = itemMedia.getHighdef_video_path();
         FileSystemResource file = new FileSystemResource(filePath);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
