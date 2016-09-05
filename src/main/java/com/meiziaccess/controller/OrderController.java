@@ -37,7 +37,7 @@ public class OrderController {
     public Map<String, Object> order(@RequestBody ItemMedia ord){
         Map<String, Object> order_return = new HashMap<String, Object>();
         System.out.println(ord.getUuid() + ", " + ord.isIsEntire() + ", " + ord.getStarttime() + ", " + ord.getEndtime() + ", " + ord.getHighdef_video_path());
-        String url = "http://" + IPAddress + "/media?id=" + ord.getUuid();
+        String url = "http://" + IPAddress + "/media?uuid=" + ord.getUuid();
 
         //处理视频，修改链接和地址
         ord.setStatus(1);
@@ -65,6 +65,7 @@ public class OrderController {
         //生成相应的文件下载链接
 //        String filePath = "E:/" + 1 + ".rmvb";
 //        通过uuid查找高码视频路径
+        System.out.println("uuid = " + uuid);
         List<ItemMedia> list = itemMediaRepository.findMediaByUuid(uuid);
         if(list.isEmpty()) return null;
         ItemMedia itemMedia = list.get(0);
