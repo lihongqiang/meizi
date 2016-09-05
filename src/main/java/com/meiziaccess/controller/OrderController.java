@@ -35,8 +35,8 @@ public class OrderController {
     @ResponseBody
     public Map<String, Object> order(@RequestBody ItemMedia ord){
         Map<String, Object> order_return = new HashMap<String, Object>();
-        System.out.println(ord.getUuid() + ", " + ord.getIsEntire() + ", " + ord.getStarttime() + ", " + ord.getEndtime() + ", " + ord.getHighdef_video_path());
-        String url =  IPAddress + "/media?id=1";
+        System.out.println(ord.getUuid() + ", " + ord.isIsEntire() + ", " + ord.getStarttime() + ", " + ord.getEndtime() + ", " + ord.getHighdef_video_path());
+        String url = "http://" + IPAddress + "/media?id=1";
 
         //处理视频，修改链接和地址
         ord.setStatus(1);

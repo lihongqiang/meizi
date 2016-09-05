@@ -63,7 +63,7 @@ public class ItemMedia {
         this.uuid = uuid;
     }
 
-    public Boolean getIsEntire() {
+    public Boolean isIsEntire() {
         return isEntire;
     }
 
