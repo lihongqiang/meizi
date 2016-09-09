@@ -23,7 +23,7 @@ import ch.ethz.ssh2.StreamGobbler;
 public class CommandRunner {
 
     /****************************************/
-    private static final String host = "162.105.16.84";
+    private static final String host = "162.105.16.34";
 //    private static final String host = "162.105.180.15";
 
     private static final  int port = 8022;
