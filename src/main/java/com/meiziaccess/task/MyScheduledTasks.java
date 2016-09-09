@@ -77,7 +77,7 @@ public class MyScheduledTasks {
     }
 
 //    定时下载处理后的编目和订单文件
-    @Scheduled(fixedRate = 1000*3600*24)
+//    @Scheduled(fixedRate = 1000*3600*24)
     public void downLoadTasks(){
         System.out.println("Run download task. The time is  " + dateFormat.format(new Date()));
         System.out.println("download_remote_path is " + download_remote_path);
