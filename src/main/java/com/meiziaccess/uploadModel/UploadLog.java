@@ -52,6 +52,9 @@ public class UploadLog {
     @Column(name = "xml_trans_path")
     private String xml_trans_path;
 
+    @Column(name = "video_play_path")
+    private String video_play_path;
+
     @Column(name = "video_upload_path")
     private String video_upload_path;
 
@@ -156,5 +159,13 @@ public class UploadLog {
 
     public void setVideo_copyright(String video_copyright) {
         this.video_copyright = video_copyright;
+    }
+
+    public String getVideo_play_path() {
+        return video_play_path;
+    }
+
+    public void setVideo_play_path(String video_play_path) {
+        this.video_play_path = video_play_path;
     }
 }

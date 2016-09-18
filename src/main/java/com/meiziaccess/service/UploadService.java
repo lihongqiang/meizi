@@ -17,7 +17,8 @@ public class UploadService {
 
     //上传编目和低码视频,定时
     public boolean uploadXmlAndVideo(String folderPath, UploadLogRepository uploadLogRepository, String upload_remote_path,
-                                     String upload_vendor_name, String uploader_name, String vendor_path, String trans_path){
+                                     String upload_vendor_name, String uploader_name, String vendor_path, String trans_path,
+                                     String play_path){
 
         //检查文件夹是否为空，为空则退出
         if(!tool.checkFolder(folderPath)){
@@ -27,7 +28,7 @@ public class UploadService {
 
         //扫描文件夹，上传文件
         System.out.println("上传文件中......");
-        tool.uploadFiles(folderPath, uploadLogRepository, upload_remote_path, upload_vendor_name, uploader_name, vendor_path, trans_path);
+        tool.uploadFiles(folderPath, uploadLogRepository, upload_remote_path, upload_vendor_name, uploader_name, vendor_path, trans_path, play_path);
 
         return true;
     }

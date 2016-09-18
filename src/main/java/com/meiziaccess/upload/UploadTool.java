@@ -96,7 +96,7 @@ public class UploadTool implements UploadToolInterface {
 
     public boolean updateDatabase(String folderPath, String xmlName, String videoName, UploadLogRepository uploadLogRepository,
                                   String upload_remote_path,String upload_vendor_name, String uploader_name, String vendor_path,
-                                  String trans_path) {
+                                  String trans_path, String play_path) {
 
         Map<String, String> map = new HashMap<String, String>();
         //获取上架信息:price copyright
@@ -119,13 +119,20 @@ public class UploadTool implements UploadToolInterface {
                                     vendor_path + "/"+videoName,                                         //高码视频路径
                                     Double.parseDouble(map.get("price")),   //价格
                                     map.get("copyright"));
+        //xml转换路径
         log.setXml_trans_path(trans_path + "/" +"trans_"+new Date().getTime()+"_"+xmlName);
+
+        //视频转换成mp4播放路径
+        String videoTransName = videoName.split(".")[0] + ".mp4";
+        log.setVideo_play_path(play_path+videoTransName);
+
         uploadLogRepository.save(log);
         return true;
     }
 
     public boolean uploadFile(String folderPath, UploadLogRepository uploadLogRepository, String upload_remote_path,
-                              String upload_vendor_name, String uploader_name, String vendor_path, String trans_path) {
+                              String upload_vendor_name, String uploader_name, String vendor_path, String trans_path,
+                              String play_path) {
 
         if(uploadLogRepository == null){
             System.out.println("UploadLogRepository is null.");
@@ -200,7 +207,7 @@ public class UploadTool implements UploadToolInterface {
             }
             //更新数据库
             updateDatabase(folderPath, xmlName, videoName, uploadLogRepository,  upload_remote_path,
-                    upload_vendor_name,  uploader_name,  vendor_path, trans_path );
+                    upload_vendor_name,  uploader_name,  vendor_path, trans_path, play_path );
             //删除upload.txt文件
 //            CommandRunner.execCmds("rm " + folderPath + "/" + "upload.txt");
         }
@@ -208,7 +215,8 @@ public class UploadTool implements UploadToolInterface {
     }
 
     public boolean uploadFiles(String folderPath, UploadLogRepository uploadLogRepository, String upload_remote_path,
-                               String upload_vendor_name, String uploader_name, String vendor_path, String trans_path){
+                               String upload_vendor_name, String uploader_name, String vendor_path, String trans_path,
+                               String play_path){
         Date date = new Date();
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String day = dateFormat.format(date);
@@ -266,7 +274,7 @@ public class UploadTool implements UploadToolInterface {
                 System.out.println("localPath="+folderPath+"/"+folderName);
                 System.out.println("remotePath="+remote_full_path + "/" + folderName);
                 uploadFile(folderPath+"/"+folderName, uploadLogRepository, remote_full_path + "/" + folderName,
-                        upload_vendor_name, uploader_name,  vendor_path, trans_path);
+                        upload_vendor_name, uploader_name,  vendor_path, trans_path, play_path);
 
                 //删除本地文件夹
                 System.out.println("rm -rf " + folderPath + "/" + outs.get(i));

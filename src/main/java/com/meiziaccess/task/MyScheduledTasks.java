@@ -50,6 +50,9 @@ public class MyScheduledTasks {
 
     @Value("${configure.upload.trans_path}")
     private String trans_path;
+
+    @Value("${configure.upload.play_path}")
+    private String play_path;
     /****************************************/
 
 
@@ -72,7 +75,7 @@ public class MyScheduledTasks {
         System.out.println("download_local_path = " + download_local_path);
         System.out.println("uploader_name = " + download_remote_path);
 
-        uploadService.uploadXmlAndVideo(upload_local_path, uploadLogRepository, upload_remote_path, upload_vendor_name, uploader_name, vendor_path, trans_path);
+        uploadService.uploadXmlAndVideo(upload_local_path, uploadLogRepository, upload_remote_path, upload_vendor_name, uploader_name, vendor_path, trans_path, play_path);
 
     }
 
