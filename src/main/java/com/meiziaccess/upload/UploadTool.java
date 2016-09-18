@@ -94,7 +94,8 @@ public class UploadTool implements UploadToolInterface {
     }
 
 
-    public boolean updateDatabase(String folderPath, String xmlName, String videoName, UploadLogRepository uploadLogRepository,
+    public boolean
+    updateDatabase(String folderPath, String xmlName, String videoName, UploadLogRepository uploadLogRepository,
                                   String upload_remote_path,String upload_vendor_name, String uploader_name, String vendor_path,
                                   String trans_path, String play_path) {
 
@@ -123,7 +124,7 @@ public class UploadTool implements UploadToolInterface {
         log.setXml_trans_path(trans_path + "/" +"trans_"+new Date().getTime()+"_"+xmlName);
 
         //视频转换成mp4播放路径
-        String videoTransName = videoName.split(".")[0] + ".mp4";
+        String videoTransName = videoName.split("\\.")[0] + ".mp4";
         log.setVideo_play_path(play_path+videoTransName);
 
         uploadLogRepository.save(log);
