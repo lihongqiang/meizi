@@ -125,7 +125,7 @@ public class UploadTool implements UploadToolInterface {
 
         //视频转换成mp4播放路径
         String videoTransName = videoName.split("\\.")[0] + ".mp4";
-        log.setVideo_play_path(play_path+videoTransName);
+        log.setVideo_play_path(play_path+"/"+videoTransName);
 
         uploadLogRepository.save(log);
         return true;
