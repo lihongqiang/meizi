@@ -32,6 +32,9 @@ public class ItemMedia {
     @Column(name = "highdef_video_path")
     private String highdef_video_path;
 
+    @Column(name = "order_video_path")
+    private String order_video_path;
+
     @Column(name = "format")
     private String format;
 
@@ -43,7 +46,7 @@ public class ItemMedia {
 
     public ItemMedia() {super();}
 
-    public ItemMedia(Long uuid, Boolean isEntire, int starttime, int endtime, String highdef_video_path, String format, int status, String url) {
+    public ItemMedia(Long uuid, Boolean isEntire, int starttime, int endtime, String highdef_video_path, String format, int status, String url, String order_video_path) {
         super();
         this.uuid = uuid;
         this.isEntire = isEntire;
@@ -53,6 +56,7 @@ public class ItemMedia {
         this.format = format;
         this.status = status;
         this.url = url;
+        this.order_video_path = order_video_path;
     }
 
     public Long getUuid() {
@@ -117,5 +121,21 @@ public class ItemMedia {
 
     public void setFormat(String format) {
         this.format = format;
+    }
+
+    public String getOrder_video_path() {
+        return order_video_path;
+    }
+
+    public void setOrder_video_path(String order_video_path) {
+        this.order_video_path = order_video_path;
+    }
+
+    public Boolean getEntire() {
+        return isEntire;
+    }
+
+    public void setEntire(Boolean entire) {
+        isEntire = entire;
     }
 }
