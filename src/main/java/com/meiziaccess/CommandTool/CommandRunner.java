@@ -24,9 +24,11 @@ public class CommandRunner {
 
     /****************************************/
     private static final String host = "162.105.16.64";
+//    private static final String host = "192.168.1.8";
 //    private static final String host = "162.105.180.15";
 
     private static final  int port = 8022;
+//    private static final  int port = 22;
 //    private static final  int port = 10722;
 
     private static final  String username = "luyj";

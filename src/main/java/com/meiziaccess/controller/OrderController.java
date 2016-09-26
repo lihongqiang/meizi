@@ -50,15 +50,9 @@ public class OrderController {
             String url = "http://" + IPAddress + "/media?uuid=" + ord.getUuid();
             ord.setUrl(url);
 
-            //判断是否请求完整的高码视频
-            if(ord.getEntire()){
-                ord.setStatus(1);           //不用转码
-            }else{
-                ord.setStatus(0);           //设置成0，表示还未完成转码
+            //设置成0，表示还未完成转码
+            ord.setStatus(0);
 
-//                String fileName = ord.getHighdef_video_path().split("/")[-1].split(".")[0];
-//                ord.setOrder_video_path(download_path+"/"+ord.getUuid()+"_"+fileName+"."+ord.getFormat());  //设置转码后的路径
-            }
             itemMedia = itemMediaRepository.save(ord);
         }else{
             itemMedia = list.get(0);
@@ -89,16 +83,11 @@ public class OrderController {
         ItemMedia itemMedia = list.get(0);
         String filePath = "";
 
-        //如果请求转码，则查看转码状态，如果完成就放回，否则提示转码为完成
-        //格式转换和裁剪转换的Entire都是0，否则是1
-        if(!itemMedia.getEntire()){
-            if(itemMedia.getStatus()==0){
-                return new ResponseEntity(HttpStatus.BAD_REQUEST);
-            }else{
-                filePath = itemMedia.getOrder_video_path();
-            }
+        //查看转码状态，如果完成就返回，否则提示转码未完成
+        if(itemMedia.getStatus()==0){
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }else{
-            filePath = itemMedia.getHighdef_video_path();
+            filePath = itemMedia.getOrder_video_path();
         }
 
         FileSystemResource file = new FileSystemResource(filePath);
