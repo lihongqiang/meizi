@@ -25,17 +25,8 @@ import java.util.Vector;
 @Component
 public class DownloadTool implements DownloadToolInterface {
 
-    @Value("${configure.meizi.port}")
-    private String port;
-
-    @Value("${configure.meizi.host}")
-    private String host;
-
-    @Value("${configure.meizi.username}")
-    private String username;
-
     //Linux和Mac指令版本
-    public void download(String localDir, String remoteDir){
+    public void download(String localDir, String remoteDir, String port, String host, String username){
 
         try {
             //获取本地文件列表

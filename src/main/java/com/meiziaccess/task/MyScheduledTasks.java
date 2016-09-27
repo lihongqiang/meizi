@@ -79,6 +79,16 @@ public class MyScheduledTasks {
 
     }
 
+
+    @Value("${configure.meizi.port}")
+    private String port;
+
+    @Value("${configure.meizi.host}")
+    private String host;
+
+    @Value("${configure.meizi.username}")
+    private String username;
+
 //    定时下载处理后的编目和订单文件
     @Scheduled(fixedRate = 1000*3600*24)
     public void downLoadTasks(){
@@ -88,6 +98,6 @@ public class MyScheduledTasks {
         if(downloadService == null){
             downloadService =  new DownloadService();
         }
-        downloadService.downloadXmlAndOrder(download_local_path, download_remote_path);
+        downloadService.downloadXmlAndOrder(download_local_path, download_remote_path, port, host, username);
     }
 }
