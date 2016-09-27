@@ -4,6 +4,7 @@ import com.meiziaccess.CommandTool.CommandRunner;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cglib.core.CollectionUtils;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.env.SystemEnvironmentPropertySource;
 import org.springframework.stereotype.Component;
@@ -21,9 +22,10 @@ import java.util.Vector;
  * Created by user-u1 on 2016/6/17.
  */
 
-@Service
+@Component
+@PropertySource("classpath:application-upload.properties")
 public class DownloadTool implements DownloadToolInterface {
-    
+
     @Value("${configure.meizi.port}")
     private String port;
 
