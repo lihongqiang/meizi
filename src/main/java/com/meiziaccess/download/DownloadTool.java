@@ -23,7 +23,6 @@ import java.util.Vector;
  */
 
 @Component
-@PropertySource("classpath:application-upload.properties")
 public class DownloadTool implements DownloadToolInterface {
 
     @Value("${configure.meizi.port}")
