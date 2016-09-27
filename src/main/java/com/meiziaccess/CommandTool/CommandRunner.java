@@ -22,20 +22,19 @@ import ch.ethz.ssh2.StreamGobbler;
  */
 public class CommandRunner {
 
-    /****************************************/
+    /*****************************************
+     * @param host
+     * @param port
+     * @param username
+     * @param password
+    ****************************************/
     private static final String host = "162.105.16.64";
-//    private static final String host = "192.168.1.8";
-//    private static final String host = "162.105.180.15";
 
     private static final  int port = 8022;
-//    private static final  int port = 22;
-//    private static final  int port = 10722;
 
     private static final  String username = "luyj";
-//    private static final  String username = "derc";
 
     private static final  String password = "pkulky201";
-
     /****************************************/
 
     private static final Logger logger = Logger.getLogger(CommandRunner.class);
@@ -45,9 +44,6 @@ public class CommandRunner {
 
     /**
      * Get remote file through scp
-//     * @param host
-//     * @param username
-//     * @param password
      * @param remoteFile
      * @param localDir
      * @throws IOException
@@ -64,9 +60,6 @@ public class CommandRunner {
 
     /**
      * Put local file to remote machine.
-//     * @param host
-//     * @param username
-//     * @param password
      * @param localFile
      * @param remoteDir
      * @throws IOException
@@ -83,9 +76,6 @@ public class CommandRunner {
 
     /**
      * Run SSH command.
-//     * @param host
-//     * @param username
-//     * @param password
      * @param cmd
      * @return exit status
      * @throws IOException
@@ -150,9 +140,6 @@ public class CommandRunner {
 
     /**
      * return a opened Connection
-//     * @param host
-//     * @param username
-//     * @param password
      * @return
      * @throws IOException
      */

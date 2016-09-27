@@ -4,6 +4,7 @@ import com.meiziaccess.CommandTool.CommandRunner;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cglib.core.CollectionUtils;
 import org.springframework.core.env.SystemEnvironmentPropertySource;
+import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,10 +17,18 @@ import java.util.Vector;
 /**
  * Created by user-u1 on 2016/6/17.
  */
+
+@Component
 public class DownloadTool implements DownloadToolInterface {
 
-    @Value("${configure.download.remote_path}")
-    private String download_remote_path;
+    @Value("${configure.meizi.port}")
+    private String port;
+
+    @Value("${configure.meizi.host}")
+    private String host;
+
+    @Value("${configure.meizi.username}")
+    private String username;
 
     //Linux和Mac指令版本
     public void download(String localDir, String remoteDir){
@@ -32,9 +41,12 @@ public class DownloadTool implements DownloadToolInterface {
             Vector<String> remoteList = CommandRunner.runSSHAndGetString("/bin/ls " + remoteDir);
 
             remoteList.removeAll(localList);
+
+            System.out.println(port + "  " + host + "  " + username);
             for(int i=0; i<remoteList.size(); i++){
                 System.out.println(remoteList.get(i));
-                CommandRunner.scpGet(remoteDir+"/"+remoteList.get(i), localDir);
+                CommandRunner.execCmds("scp -P "+port+" -r  "+username+"@"+host+":"+remoteDir+"/"+remoteList.get(i) +" "+localDir);
+//                CommandRunner.scpGet(remoteDir+"/"+remoteList.get(i), localDir);
             }
 
         } catch (IOException e) {
