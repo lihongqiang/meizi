@@ -3,6 +3,8 @@ package com.meiziaccess.download;
 import com.meiziaccess.CommandTool.CommandRunner;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cglib.core.CollectionUtils;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.env.SystemEnvironmentPropertySource;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -21,7 +23,7 @@ import java.util.Vector;
 
 @Service
 public class DownloadTool implements DownloadToolInterface {
-
+    
     @Value("${configure.meizi.port}")
     private String port;
 
@@ -54,5 +56,7 @@ public class DownloadTool implements DownloadToolInterface {
             e.printStackTrace();
         }
     }
+
+
 
 }

@@ -1,7 +1,5 @@
 package com.meiziaccess.configure;
 
-import org.springframework.boot.autoconfigure.AutoConfigureAfter;
-import org.springframework.boot.autoconfigure.web.WebMvcAutoConfiguration;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
@@ -30,3 +28,4 @@ public class MyWebAppConfigurer extends WebMvcConfigurerAdapter {
 
     //默认是在template文件夹下面扫描对应的.html文件，这里也可以设置自定义的路径
 }
+
