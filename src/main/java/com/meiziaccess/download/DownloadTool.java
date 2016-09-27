@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cglib.core.CollectionUtils;
 import org.springframework.core.env.SystemEnvironmentPropertySource;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -18,7 +19,7 @@ import java.util.Vector;
  * Created by user-u1 on 2016/6/17.
  */
 
-@Component
+@Service
 public class DownloadTool implements DownloadToolInterface {
 
     @Value("${configure.meizi.port}")
