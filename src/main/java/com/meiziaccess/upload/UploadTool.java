@@ -298,14 +298,14 @@ public class UploadTool implements UploadToolInterface {
                 String folderName = outs.get(i).substring(0, outs.get(i).length()-1);
                 if(folderName.contains(" ")){
                     System.out.println("/bin/mv "+folderPath+"/"+getFullName(folderName)+" "+folderPath+"/"+removeBlank(folderName));
-                    CommandRunner.execCmds("/bin/mv "+folderPath+"/"+getFullName(folderName)+" "+folderPath+"/"+removeBlank(folderName));
+                    Vector<String> vecstrs = CommandRunner.execCmds("/bin/mv "+folderPath+"/"+getFullName(folderName)+" "+folderPath+"/"+removeBlank(folderName));
+                    System.out.print(vecstrs.toString());
                     folderName = removeBlank(folderName);
                 }
                 System.out.println("/bin/mkdir " + remote_full_path + "/" + folderName );
                 try {
                     CommandRunner.runSSH("/bin/mkdir " + remote_full_path + "/" + folderName);
                 } catch (IOException e) {
-                    System.out.println(e.toString());
                     e.printStackTrace();
                 }
 
