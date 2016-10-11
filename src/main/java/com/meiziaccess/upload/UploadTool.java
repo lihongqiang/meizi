@@ -215,10 +215,8 @@ public class UploadTool implements UploadToolInterface {
                 System.out.println("rm " + folderPath + "/" + outs.get(i));
 //                CommandRunner.execCmds("rm " + folderPath + "/" + outs.get(i));
             }
-            xmlName = removeBlank(xmlName);
-            videoName = removeBlank(videoName);
             //更新数据库
-            updateDatabase(folderPath, xmlName , videoName, uploadLogRepository,  upload_remote_path,
+            updateDatabase(folderPath, removeBlank(xmlName) , removeBlank(videoName), uploadLogRepository,  upload_remote_path,
                     upload_vendor_name,  uploader_name,  vendor_path, trans_path, play_path );
             //删除upload.txt文件
 //            CommandRunner.execCmds("rm " + folderPath + "/" + "upload.txt");
@@ -275,10 +273,9 @@ public class UploadTool implements UploadToolInterface {
 
                 //创建远程文件夹
                 String folderName = outs.get(i).substring(0, outs.get(i).length()-1);
-                folderName = removeBlank(folderName);
                 System.out.println("/bin/mkdir " + remote_full_path + "/" + folderName );
                 try {
-                    CommandRunner.runSSH("/bin/mkdir " + remote_full_path + "/" + folderName);
+                    CommandRunner.runSSH("/bin/mkdir " + remote_full_path + "/" + removeBlank(folderName));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

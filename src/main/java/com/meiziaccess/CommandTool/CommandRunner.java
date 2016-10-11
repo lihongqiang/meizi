@@ -105,8 +105,7 @@ public class CommandRunner {
 
         sess.close();
         conn.close();
-        return 1;
-//        return sess.getExitStatus().intValue();
+        return sess.getExitStatus().intValue();
     }
 
     public static Vector<String> runSSHAndGetString(String cmd) throws IOException {
