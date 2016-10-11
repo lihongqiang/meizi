@@ -140,6 +140,17 @@ public class UploadTool implements UploadToolInterface {
         }
         return ans;
     }
+
+    public String getFullName(String s){
+        String ans="";
+        for(int i=0; i<s.length(); i++){
+            if(s.charAt(i) == ' '){
+                ans+='\\';
+            }
+            ans += s.charAt(i);
+        }
+        return ans;
+    }
     public boolean uploadFile(String folderPath, UploadLogRepository uploadLogRepository, String upload_remote_path,
                               String upload_vendor_name, String uploader_name, String vendor_path, String trans_path,
                               String play_path) {
@@ -195,11 +206,11 @@ public class UploadTool implements UploadToolInterface {
 
                 if(outs.get(i).contains(" ")){
                     if(!file[file.length-1].equals("txt") && !file[file.length-1].equals("xml")){
-                        System.out.println("/bin/mv " + vendor_path + "/" + outs.get(i) + " " + vendor_path + "/" + removeBlank(outs.get(i)));
-                        CommandRunner.execCmds("/bin/mv " + vendor_path + "/" + outs.get(i) + " " + vendor_path + "/" + removeBlank(outs.get(i)));
+                        System.out.println("/bin/mv " + vendor_path + "/" + getFullName(outs.get(i)) + " " + vendor_path + "/" + removeBlank(outs.get(i)));
+                        CommandRunner.execCmds("/bin/mv " + vendor_path + "/" + getFullName(outs.get(i)) + " " + vendor_path + "/" + removeBlank(outs.get(i)));
                     }
-                    System.out.println("/bin/mv "+folderPath+"/"+outs.get(i)+" "+folderPath+"/"+removeBlank(outs.get(i)));
-                    CommandRunner.execCmds("/bin/mv "+folderPath+"/"+outs.get(i)+" "+folderPath+"/"+removeBlank(outs.get(i)));
+                    System.out.println("/bin/mv "+folderPath+"/"+getFullName(outs.get(i))+" "+folderPath+"/"+removeBlank(outs.get(i)));
+                    CommandRunner.execCmds("/bin/mv "+folderPath+"/"+getFullName(outs.get(i))+" "+folderPath+"/"+removeBlank(outs.get(i)));
                     outs.set(i, removeBlank(outs.get(i)));
                 }
 
@@ -286,8 +297,8 @@ public class UploadTool implements UploadToolInterface {
                 //创建远程文件夹
                 String folderName = outs.get(i).substring(0, outs.get(i).length()-1);
                 if(folderName.contains(" ")){
-                    System.out.println("/bin/mv "+folderPath+"/"+folderName+" "+folderPath+"/"+removeBlank(folderName));
-                    CommandRunner.execCmds("/bin/mv "+folderPath+"/"+folderName+" "+folderPath+"/"+removeBlank(folderName));
+                    System.out.println("/bin/mv "+folderPath+"/"+getFullName(folderName)+" "+folderPath+"/"+removeBlank(folderName));
+                    CommandRunner.execCmds("/bin/mv "+folderPath+"/"+getFullName(folderName)+" "+folderPath+"/"+removeBlank(folderName));
                     folderName = removeBlank(folderName);
                 }
                 System.out.println("/bin/mkdir " + remote_full_path + "/" + folderName );
