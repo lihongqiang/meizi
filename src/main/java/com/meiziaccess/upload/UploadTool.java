@@ -305,6 +305,7 @@ public class UploadTool implements UploadToolInterface {
                 try {
                     CommandRunner.runSSH("/bin/mkdir " + remote_full_path + "/" + folderName);
                 } catch (IOException e) {
+                    System.out.println(e.toString());
                     e.printStackTrace();
                 }
 
