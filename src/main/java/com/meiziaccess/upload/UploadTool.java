@@ -229,8 +229,8 @@ public class UploadTool implements UploadToolInterface {
                     }
                 }
                 try {
-                    System.out.println("  " + folderPath + "/" + outs.get(i) + " " + upload_remote_path);
-                    CommandRunner.scpPut(folderPath + "/" + outs.get(i), upload_remote_path + upload_remote_path);
+                    System.out.println(folderPath + "/" + outs.get(i) + " " + upload_remote_path);
+                    CommandRunner.scpPut(folderPath + "/" + outs.get(i), upload_remote_path);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -316,7 +316,7 @@ public class UploadTool implements UploadToolInterface {
 
                 //删除本地文件夹
                 System.out.println("rm -rf " + folderPath + "/" + outs.get(i));
-                CommandRunner.execCmds("rm -rf " + folderPath + "/" + outs.get(i));
+//                CommandRunner.execCmds("rm -rf " + folderPath + "/" + outs.get(i));
             }
             //删除本地upload.txt文件
             CommandRunner.execCmds("rm -rf " + folderPath + "/" + "upload.txt");
