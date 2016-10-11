@@ -195,11 +195,11 @@ public class UploadTool implements UploadToolInterface {
 
                 if(outs.get(i).contains(" ")){
                     if(!file[file.length-1].equals("txt") && !file[file.length-1].equals("xml")){
-                        System.out.println("mv " + vendor_path + "/" + outs.get(i) + " " + vendor_path + "/" + removeBlank(outs.get(i)));
-                        CommandRunner.execCmds("mv " + vendor_path + "/" + outs.get(i) + " " + vendor_path + "/" + removeBlank(outs.get(i)));
+                        System.out.println("/bin/mv " + vendor_path + "/" + outs.get(i) + " " + vendor_path + "/" + removeBlank(outs.get(i)));
+                        CommandRunner.execCmds("/bin/mv " + vendor_path + "/" + outs.get(i) + " " + vendor_path + "/" + removeBlank(outs.get(i)));
                     }
-                    System.out.println("mv "+folderPath+"/"+outs.get(i)+" "+folderPath+"/"+removeBlank(outs.get(i)));
-                    CommandRunner.execCmds("mv "+folderPath+"/"+outs.get(i)+" "+folderPath+"/"+removeBlank(outs.get(i)));
+                    System.out.println("/bin/mv "+folderPath+"/"+outs.get(i)+" "+folderPath+"/"+removeBlank(outs.get(i)));
+                    CommandRunner.execCmds("/bin/mv "+folderPath+"/"+outs.get(i)+" "+folderPath+"/"+removeBlank(outs.get(i)));
                     outs.set(i, removeBlank(outs.get(i)));
                 }
 
@@ -286,8 +286,8 @@ public class UploadTool implements UploadToolInterface {
                 //创建远程文件夹
                 String folderName = outs.get(i).substring(0, outs.get(i).length()-1);
                 if(folderName.contains(" ")){
-                    System.out.println("mv "+folderPath+"/"+folderName+" "+folderPath+"/"+removeBlank(folderName));
-                    CommandRunner.execCmds("mv "+folderPath+"/"+folderName+" "+folderPath+"/"+removeBlank(folderName));
+                    System.out.println("/bin/mv "+folderPath+"/"+folderName+" "+folderPath+"/"+removeBlank(folderName));
+                    CommandRunner.execCmds("/bin/mv "+folderPath+"/"+folderName+" "+folderPath+"/"+removeBlank(folderName));
                     folderName = removeBlank(folderName);
                 }
                 System.out.println("/bin/mkdir " + remote_full_path + "/" + folderName );
