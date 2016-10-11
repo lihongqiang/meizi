@@ -115,16 +115,16 @@ public class UploadTool implements UploadToolInterface {
         UploadLog log = new UploadLog(upload_vendor_name,
                                     new Date(),
                                     uploader_name,
-                                    upload_remote_path +"/"+ removeBlank(xmlName) ,          //xml上传路径
-                                    upload_remote_path +"/"+ removeBlank(videoName),         //vedio上传路径
-                                    vendor_path + "/"+removeBlank(videoName),                //高码视频路径
+                                    upload_remote_path +"/"+ xmlName ,          //xml上传路径
+                                    upload_remote_path +"/"+ videoName,         //vedio上传路径
+                                    vendor_path + "/"+videoName,                //高码视频路径
                                     Double.parseDouble(map.get("price")),   //价格
                                     map.get("copyright"));
         //xml转换路径
-        log.setXml_trans_path(trans_path + "/" +"trans_"+new Date().getTime()+"_"+removeBlank(xmlName));
+        log.setXml_trans_path(trans_path + "/" +"trans_"+new Date().getTime()+"_"+xmlName);
 
         //视频转换成mp4播放路径
-        String videoTransName = removeBlank(videoName).split("\\.")[0] + ".mp4";
+        String videoTransName = videoName.split("\\.")[0] + ".mp4";
         log.setVideo_play_path(play_path+"/"+videoTransName);
 
         uploadLogRepository.save(log);
@@ -192,6 +192,16 @@ public class UploadTool implements UploadToolInterface {
             for(int i=0; i<outs.size(); i++){
                 String[] file = outs.get(i).split("\\.");
                 System.out.println(outs.get(i) + " " +file.length);
+
+                if(outs.get(i).contains(" ")){
+                    if(!file[file.length-1].equals("txt") && !file[file.length-1].equals("xml")){
+                        System.out.println("mv " + vendor_path + "/" + outs.get(i) + " " + vendor_path + "/" + removeBlank(outs.get(i)));
+                        CommandRunner.execCmds("mv " + vendor_path + "/" + outs.get(i) + " " + vendor_path + "/" + removeBlank(outs.get(i)));
+                    }
+                    CommandRunner.execCmds("mv "+folderPath+"/"+outs.get(i)+" "+folderPath+"/"+removeBlank(outs.get(i)));
+                    outs.set(i, removeBlank(outs.get(i)));
+                }
+
                 //判断是否是xml文件
                 if(file[file.length-1].equals("xml")){
                     xmlName = outs.get(i);
@@ -204,13 +214,11 @@ public class UploadTool implements UploadToolInterface {
                         //上传视频
 //                        CommandRunner.execCmds("scp -P 10722 " + folderPath + "/" + outs.get(i) + " derc@162.105.180.15:" + upload_remote_path );
                         videoName = outs.get(i);
-                        if(videoName.contains(" ")){
-                            CommandRunner.execCmds("mv " + vendor_path + "/" + videoName + " " + vendor_path + "/" + removeBlank(videoName));
-                        }
                     }
                 }
                 try {
-                    CommandRunner.scpPut(folderPath + "/" + outs.get(i), removeBlank(upload_remote_path));
+                    System.out.println("  " + folderPath + "/" + outs.get(i) + " " + upload_remote_path);
+                    CommandRunner.scpPut(folderPath + "/" + outs.get(i), upload_remote_path + upload_remote_path);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -219,7 +227,7 @@ public class UploadTool implements UploadToolInterface {
 //                CommandRunner.execCmds("rm " + folderPath + "/" + outs.get(i));
             }
             //更新数据库
-            updateDatabase(folderPath, removeBlank(xmlName) , removeBlank(videoName), uploadLogRepository,  upload_remote_path,
+            updateDatabase(folderPath, xmlName , videoName, uploadLogRepository,  upload_remote_path,
                     upload_vendor_name,  uploader_name,  vendor_path, trans_path, play_path );
             //删除upload.txt文件
 //            CommandRunner.execCmds("rm " + folderPath + "/" + "upload.txt");
@@ -261,9 +269,9 @@ public class UploadTool implements UploadToolInterface {
 //            CommandRunner.execCmds("cmd /c del " + folderPath + "\\" + "upload.txt");
         }else {
             //创建远程文件夹
-            System.out.println("/bin/mkdir " + removeBlank(remote_full_path) );
+            System.out.println("/bin/mkdir " + remote_full_path );
             try {
-                CommandRunner.runSSH( "/bin/mkdir " + removeBlank(remote_full_path) );
+                CommandRunner.runSSH( "/bin/mkdir " + remote_full_path );
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -276,16 +284,20 @@ public class UploadTool implements UploadToolInterface {
 
                 //创建远程文件夹
                 String folderName = outs.get(i).substring(0, outs.get(i).length()-1);
-                System.out.println("/bin/mkdir " + remote_full_path + "/" + removeBlank(folderName) );
+                if(folderName.contains(" ")){
+                    CommandRunner.execCmds("mv "+folderPath+"/"+folderName+" "+folderPath+"/"+removeBlank(folderName));
+                    folderName = removeBlank(folderName);
+                }
+                System.out.println("/bin/mkdir " + remote_full_path + "/" + folderName );
                 try {
-                    CommandRunner.runSSH("/bin/mkdir " + remote_full_path + "/" + removeBlank(folderName));
+                    CommandRunner.runSSH("/bin/mkdir " + remote_full_path + "/" + folderName);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
 
                 //上传和删除文件
                 System.out.println("localPath="+folderPath+"/"+folderName);
-                System.out.println("remotePath="+remote_full_path + "/" + removeBlank(folderName));
+                System.out.println("remotePath="+remote_full_path + "/" + folderName);
                 uploadFile(folderPath+"/"+folderName, uploadLogRepository, remote_full_path + "/" + folderName,
                         upload_vendor_name, uploader_name,  vendor_path, trans_path, play_path);
 
