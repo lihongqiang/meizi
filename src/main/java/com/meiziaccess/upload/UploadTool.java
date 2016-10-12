@@ -297,12 +297,16 @@ public class UploadTool implements UploadToolInterface {
                 //创建远程文件夹
                 String folderName = outs.get(i).substring(0, outs.get(i).length()-1);
                 if(folderName.contains(" ")){
-                   
-                    Vector<String> vecstrs0 = CommandRunner.execCmds("ll "+folderPath+"/"+getFullName(folderName));
+                    System.out.println("ll "+folderPath+"/"+getFullName(folderName));
+//                    Vector<String> vecstrs0 = CommandRunner.execCmds("ll "+folderPath+"/"+getFullName(folderName));
+//                    System.out.print(vecstrs0.toString());
+
+                    System.out.println("ll "+folderPath+"/"+folderName);
+                    Vector<String> vecstrs0 = CommandRunner.execCmds("ll "+folderPath+"/"+folderName);
                     System.out.print(vecstrs0.toString());
 
-                    System.out.println("mv "+folderPath+"/"+getFullName(folderName)+" "+folderPath+"/"+removeBlank(folderName));
-                    Vector<String> vecstrs = CommandRunner.execCmds("mv "+folderPath+"/"+getFullName(folderName)+" "+folderPath+"/"+removeBlank(folderName));
+                    System.out.println("mv "+folderPath+"/"+folderName+" "+folderPath+"/"+removeBlank(folderName));
+                    Vector<String> vecstrs = CommandRunner.execCmds("mv "+folderPath+"/"+folderName+" "+folderPath+"/"+removeBlank(folderName));
                     System.out.println(vecstrs.toString());
                     folderName = removeBlank(folderName);
                 }
