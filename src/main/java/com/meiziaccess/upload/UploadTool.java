@@ -318,28 +318,28 @@ public class UploadTool implements UploadToolInterface {
                     //加上转义符
                     System.out.println("ll "+folderPath+"/"+getFullNameWithZhunayi(folderName));
                     String[] cmdsArray = {"ll", folderPath+"/"+getFullNameWithZhunayi(folderName)};
-                    System.out.println(cmdsArray);
+                    System.out.println(cmdsArray.toString());
                     Vector<String> vecstrs3 = CommandRunner.execCmdsArray(cmdsArray);
                     System.out.print(vecstrs3.toString());
 
                     //用引号扩充空格
                     System.out.println("ll "+folderPath+"/"+getFullName(folderName));
                     cmdsArray = new String[]{"ll", folderPath+"/"+getFullName(folderName)};
-                    System.out.println(cmdsArray);
+                    System.out.println(cmdsArray.toString());
                     Vector<String> vecstrs2 = CommandRunner.execCmdsArray(cmdsArray);
                     System.out.print(vecstrs2.toString());
 
                     //不修改
                     System.out.println("ll "+folderPath+"/"+folderName);
                     cmdsArray = new String[]{"ll", folderPath+"/"+folderName};
-                    System.out.println(cmdsArray);
+                    System.out.println(cmdsArray.toString());
                     Vector<String> vecstrs1 = CommandRunner.execCmdsArray(cmdsArray);
                     System.out.print(vecstrs1.toString());
 
                     //用引号填充两边
                     System.out.println("ll "+ "\""+folderPath+"/"+folderName+"\"");
                     cmdsArray = new String []{"ll", "\""+folderPath+"/"+folderName+"\""};
-                    System.out.println(cmdsArray);
+                    System.out.println(cmdsArray.toString());
                     Vector<String> vecstrs0 = CommandRunner.execCmdsArray(cmdsArray);
                     System.out.print(vecstrs0.toString());
 
