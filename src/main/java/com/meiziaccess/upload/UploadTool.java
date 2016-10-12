@@ -156,6 +156,18 @@ public class UploadTool implements UploadToolInterface {
         }
         return ans;
     }
+
+    public String getFullNameWithZhunayi(String s){
+        String ans="";
+        for(int i=0; i<s.length(); i++){
+            if(s.charAt(i) == ' ') {
+                ans += '\\';
+            }
+            ans += s.charAt(i);
+        }
+        return ans;
+    }
+
     public boolean uploadFile(String folderPath, UploadLogRepository uploadLogRepository, String upload_remote_path,
                               String upload_vendor_name, String uploader_name, String vendor_path, String trans_path,
                               String play_path) {
@@ -302,16 +314,26 @@ public class UploadTool implements UploadToolInterface {
                 //创建远程文件夹
                 String folderName = outs.get(i).substring(0, outs.get(i).length()-1);
                 if(folderName.contains(" ")){
+
+                    //加上转义符
+                    System.out.println("ll "+folderPath+"/"+getFullNameWithZhunayi(folderName));
+                    String[] cmdsArray = {"ll", folderPath+"/"+getFullNameWithZhunayi(folderName)};
+                    Vector<String> vecstrs3 = CommandRunner.execCmdsArray(cmdsArray);
+                    System.out.print(vecstrs3.toString());
+
+                    //用引号扩充空格
                     System.out.println("ll "+folderPath+"/"+getFullName(folderName));
-                    String[] cmdsArray = {"ll", folderPath+"/"+getFullName(folderName)};
+                    cmdsArray = new String[]{"ll", folderPath+"/"+getFullName(folderName)};
                     Vector<String> vecstrs2 = CommandRunner.execCmdsArray(cmdsArray);
                     System.out.print(vecstrs2.toString());
-//
+
+                    //不修改
                     System.out.println("ll "+folderPath+"/"+folderName);
                     cmdsArray = new String[]{"ll", folderPath+"/"+folderName};
                     Vector<String> vecstrs1 = CommandRunner.execCmdsArray(cmdsArray);
                     System.out.print(vecstrs1.toString());
 
+                    //用引号填充两边
                     System.out.println("ll "+ "\""+folderPath+"/"+folderName+"\"");
                     cmdsArray = new String []{"ll ", "\""+folderPath+"/"+folderName+"\""};
                     Vector<String> vecstrs0 = CommandRunner.execCmdsArray(cmdsArray);
