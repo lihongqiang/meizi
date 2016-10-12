@@ -190,8 +190,28 @@ public class CommandRunner {
     public static Vector<String> execCmds(String cmd) {
         Vector<String> outs = new Vector<String>();
         try {
-            String[] cmds = {cmd, ""};
-            Process pro = Runtime.getRuntime().exec(cmds);
+            Process pro = Runtime.getRuntime().exec(cmd);
+            pro.waitFor();
+            InputStream in = pro.getInputStream();
+            BufferedReader read = new BufferedReader(new InputStreamReader(in));
+            String line = null;
+            while((line = read.readLine())!=null){
+                outs.add(line);
+            }
+            //如果pro不为空，那么要清空
+            if(null!=pro){
+                pro.destroy();
+                pro=null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return outs;
+    }
+    public static Vector<String> execCmdsArray(String[] cmd) {
+        Vector<String> outs = new Vector<String>();
+        try {
+            Process pro = Runtime.getRuntime().exec(cmd);
             pro.waitFor();
             InputStream in = pro.getInputStream();
             BufferedReader read = new BufferedReader(new InputStreamReader(in));
