@@ -312,8 +312,8 @@ public class UploadTool implements UploadToolInterface {
                     Vector<String> vecstrs1 = CommandRunner.execCmdsArray(cmdsArray);
                     System.out.print(vecstrs1.toString());
 
-                    System.out.println("ll "+ "\""+folderPath+"/"+getFullName(folderName)+"\"");
-                    cmdsArray = new String []{"ll ", "\""+folderPath+"/"+getFullName(folderName)+"\""};
+                    System.out.println("ll "+ "\""+folderPath+"/"+folderName+"\"");
+                    cmdsArray = new String []{"ll ", "\""+folderPath+"/"+folderName+"\""};
                     Vector<String> vecstrs0 = CommandRunner.execCmdsArray(cmdsArray);
                     System.out.print(vecstrs0.toString());
 
