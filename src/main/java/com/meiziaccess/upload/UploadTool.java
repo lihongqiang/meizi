@@ -302,13 +302,13 @@ public class UploadTool implements UploadToolInterface {
                 //创建远程文件夹
                 String folderName = outs.get(i).substring(0, outs.get(i).length()-1);
                 if(folderName.contains(" ")){
-//                    System.out.println("ll "+folderPath+"/"+getFullName(folderName));
-//                    Vector<String> vecstrs0 = CommandRunner.execCmds("ll "+folderPath+"/"+getFullName(folderName));
-//                    System.out.print(vecstrs0.toString());
+                    System.out.println("ll "+folderPath+"/"+getFullName(folderName));
+                    Vector<String> vecstrs2 = CommandRunner.execCmds('\"'+"ll "+folderPath+"/"+folderName+'\"');
+                    System.out.print(vecstrs2.toString());
 //
-//                    System.out.println("ll "+folderPath+"/"+folderName);
-//                    Vector<String> vecstrs1 = CommandRunner.execCmds("ll "+folderPath+"/"+folderName);
-//                    System.out.print(vecstrs1.toString());
+                    System.out.println("ll "+folderPath+"/"+folderName);
+                    Vector<String> vecstrs1 = CommandRunner.execCmds("ll "+folderPath+"/"+folderName);
+                    System.out.print(vecstrs1.toString());
 
                     System.out.println("ll "+folderPath+"/"+getFullName(folderName));
                     Vector<String> vecstrs0 = CommandRunner.execCmds("ll "+folderPath+"/"+getFullName(folderName));
