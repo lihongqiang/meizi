@@ -145,9 +145,14 @@ public class UploadTool implements UploadToolInterface {
         String ans="";
         for(int i=0; i<s.length(); i++){
             if(s.charAt(i) == ' '){
-                ans+='\\';
+                ans += "\" \"";
+                int j=i+1;
+                while(s.charAt(j)==' ') j++;
+                i = j-1;
+            }else{
+                ans += s.charAt(i);
             }
-            ans += s.charAt(i);
+
         }
         return ans;
     }
@@ -306,7 +311,7 @@ public class UploadTool implements UploadToolInterface {
 //                    System.out.print(vecstrs1.toString());
 
                     System.out.println("ll "+'\"'+folderPath+"/"+folderName+'\"');
-                    Vector<String> vecstrs0 = CommandRunner.execCmds("ll "+'\"'+folderPath+"/"+folderName+'\"');
+                    Vector<String> vecstrs0 = CommandRunner.execCmds("ll "+folderPath+"/"+getFullName(folderName));
                     System.out.print(vecstrs0.toString());
 
                     System.out.println("mv "+folderPath+"/"+folderName+" "+folderPath+"/"+removeBlank(folderName));
