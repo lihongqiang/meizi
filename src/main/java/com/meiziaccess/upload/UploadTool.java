@@ -333,11 +333,10 @@ public class UploadTool implements UploadToolInterface {
 //                    System.out.print(vecstrs2.toString());
 //
 //                    //不修改
-//                    System.out.println("/bin/ls "+folderPath+"/"+folderName);
-//                    cmdsArray = new String[]{"/bin/ls", folderPath+"/"+folderName};
-//                    System.out.println(cmdsArray.toString());
-//                    Vector<String> vecstrs1 = CommandRunner.execCmdsArray(cmdsArray);
-//                    System.out.print(vecstrs1.toString());
+                    System.out.println("/bin/ls "+folderPath+"/"+folderName);
+                    String[] cmdsArray1 = new String[]{"/bin/ls", folderPath+"/"+folderName};
+                    Vector<String> vecstrs1 = CommandRunner.execCmdsArray(cmdsArray1);
+                    System.out.print(vecstrs1.toString());
 
 //                    //用引号填充两边
 //                    System.out.println("/bin/ls "+ "\""+folderPath+"/"+folderName+"\"");
@@ -346,8 +345,8 @@ public class UploadTool implements UploadToolInterface {
 //                    Vector<String> vecstrs0 = CommandRunner.execCmdsArray(cmdsArray);
 //                    System.out.print(vecstrs0.toString());
 
-                    System.out.println("mv "+folderPath+"/"+folderName+" "+folderPath+"/"+removeBlank(folderName));
-                    String[] cmdsArray = new String [] {"mv ", folderPath+"/"+folderName+" "+folderPath+"/"+removeBlank(folderName)};
+                    System.out.println("/bin/mv "+folderPath+"/"+folderName+" "+folderPath+"/"+removeBlank(folderName));
+                    String[] cmdsArray = new String [] {"/bin/mv", folderPath+"/"+folderName+" "+folderPath+"/"+removeBlank(folderName)};
                     Vector<String> vecstrs = CommandRunner.execCmdsArray(cmdsArray);
                     System.out.println(vecstrs.toString());
                     folderName = removeBlank(folderName);
