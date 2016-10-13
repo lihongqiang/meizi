@@ -113,10 +113,13 @@ public class UploadTool implements UploadToolInterface {
         //查找高码视频地址
         String higeCodeVideoName = "";
         String[] cmdsArray = new String[]{"/bin/ls", vendor_path};
+        System.out.println("/bin/ls "+vendor_path);
         Vector<String> lists = CommandRunner.execCmdsArray(cmdsArray);
+        System.out.println(lists.toString());
         String videoNameWithFormat = videoName.substring(0, videoName.lastIndexOf("."));
         for(String s : lists){
             String fileName = s.substring(0, s.lastIndexOf("."));
+            System.out.println(fileName + "   " + videoNameWithFormat);
             if(fileName == videoNameWithFormat){
                 higeCodeVideoName = s;
             }
