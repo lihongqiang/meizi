@@ -120,8 +120,10 @@ public class UploadTool implements UploadToolInterface {
         for(String s : lists){
             String fileName = s.substring(0, s.lastIndexOf("."));
             System.out.println(fileName + "   " + videoNameWithFormat);
-            if(fileName == videoNameWithFormat){
+            if(fileName.equals(videoNameWithFormat)){
+                System.out.println(s);
                 higeCodeVideoName = s;
+                break;
             }
         }
 
