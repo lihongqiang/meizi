@@ -93,9 +93,7 @@ public class UploadTool implements UploadToolInterface {
         return map;
     }
 
-
-    public boolean
-    updateDatabase(String folderPath, String xmlName, String videoName, UploadLogRepository uploadLogRepository,
+    public boolean updateDatabase(String folderPath, String xmlName, String videoName, UploadLogRepository uploadLogRepository,
                                   String upload_remote_path,String upload_vendor_name, String uploader_name, String vendor_path,
                                   String trans_path, String play_path) {
 
@@ -111,13 +109,26 @@ public class UploadTool implements UploadToolInterface {
         if(uploadLogRepository == null){
             System.out.println("uploadLogRepository is null");
         }
+
+        //查找高码视频地址
+        String higeCodeVideoName = "";
+        String[] cmdsArray = new String[]{"/bin/ls", vendor_path};
+        Vector<String> lists = CommandRunner.execCmdsArray(cmdsArray);
+        String videoNameWithFormat = videoName.substring(0, videoName.lastIndexOf("."));
+        for(String s : lists){
+            String fileName = s.substring(0, s.lastIndexOf("."));
+            if(fileName == videoNameWithFormat){
+                higeCodeVideoName = s;
+            }
+        }
+
         //修改数据库信息
         UploadLog log = new UploadLog(upload_vendor_name,
                                     new Date(),
                                     uploader_name,
                                     upload_remote_path +"/"+ xmlName ,          //xml上传路径
                                     upload_remote_path +"/"+ videoName,         //vedio上传路径
-                                    vendor_path + "/"+videoName,                //高码视频路径
+                                    vendor_path + "/"+higeCodeVideoName,        //高码视频路径
                                     Double.parseDouble(map.get("price")),   //价格
                                     map.get("copyright"));
         //xml转换路径
