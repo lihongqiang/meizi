@@ -224,11 +224,11 @@ public class UploadTool implements UploadToolInterface {
                 if(outs.get(i).contains(" ")){
                     String[] cmdsArray;
                     if(!file[file.length-1].equals("txt") && !file[file.length-1].equals("xml")){
-                        cmdsArray = new String[]{"/bin/mv", vendor_path + "/" + outs.get(i) + " " + vendor_path + "/" + removeBlank(outs.get(i))};
+                        cmdsArray = new String[]{"/bin/mv", vendor_path + "/" + outs.get(i),  vendor_path + "/" + removeBlank(outs.get(i))};
                         System.out.println("/bin/mv " + vendor_path + "/" + outs.get(i) + " " + vendor_path + "/" + removeBlank(outs.get(i)));
                         CommandRunner.execCmdsArray(cmdsArray);
                     }
-                    cmdsArray = new String[]{"/bin/mv", folderPath+"/"+outs.get(i)+" "+folderPath+"/"+removeBlank(outs.get(i))};
+                    cmdsArray = new String[]{"/bin/mv", folderPath+"/"+outs.get(i), folderPath+"/"+removeBlank(outs.get(i))};
                     System.out.println("/bin/mv "+folderPath+"/"+outs.get(i)+" "+folderPath+"/"+removeBlank(outs.get(i)));
                     CommandRunner.execCmdsArray(cmdsArray);
                     outs.set(i, removeBlank(outs.get(i)));
