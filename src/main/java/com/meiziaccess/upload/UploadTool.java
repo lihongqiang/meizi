@@ -222,12 +222,15 @@ public class UploadTool implements UploadToolInterface {
                 System.out.println(outs.get(i) + " " +file.length);
 
                 if(outs.get(i).contains(" ")){
+                    String[] cmdsArray;
                     if(!file[file.length-1].equals("txt") && !file[file.length-1].equals("xml")){
-                        System.out.println("/bin/mv " + vendor_path + "/" + getFullName(outs.get(i)) + " " + vendor_path + "/" + removeBlank(outs.get(i)));
-                        CommandRunner.execCmds("/bin/mv " + vendor_path + "/" + getFullName(outs.get(i)) + " " + vendor_path + "/" + removeBlank(outs.get(i)));
+                        cmdsArray = new String[]{"/bin/mv", vendor_path + "/" + outs.get(i) + " " + vendor_path + "/" + removeBlank(outs.get(i))};
+                        System.out.println("/bin/mv " + vendor_path + "/" + outs.get(i) + " " + vendor_path + "/" + removeBlank(outs.get(i)));
+                        CommandRunner.execCmdsArray(cmdsArray);
                     }
-                    System.out.println("/bin/mv "+folderPath+"/"+getFullName(outs.get(i))+" "+folderPath+"/"+removeBlank(outs.get(i)));
-                    CommandRunner.execCmds("/bin/mv "+folderPath+"/"+getFullName(outs.get(i))+" "+folderPath+"/"+removeBlank(outs.get(i)));
+                    cmdsArray = new String[]{"/bin/mv", folderPath+"/"+outs.get(i)+" "+folderPath+"/"+removeBlank(outs.get(i))};
+                    System.out.println("/bin/mv "+folderPath+"/"+outs.get(i)+" "+folderPath+"/"+removeBlank(outs.get(i)));
+                    CommandRunner.execCmdsArray(cmdsArray);
                     outs.set(i, removeBlank(outs.get(i)));
                 }
 
@@ -315,36 +318,37 @@ public class UploadTool implements UploadToolInterface {
                 String folderName = outs.get(i).substring(0, outs.get(i).length()-1);
                 if(folderName.contains(" ")){
 
-                    //加上转义符
-                    System.out.println("/bin/ls "+folderPath+"/"+getFullNameWithZhunayi(folderName));
-                    String[] cmdsArray = {"/bin/ls", folderPath+"/"+getFullNameWithZhunayi(folderName)};
-                    System.out.println(cmdsArray.toString());
-                    Vector<String> vecstrs3 = CommandRunner.execCmdsArray(cmdsArray);
-                    System.out.print(vecstrs3.toString());
+//                    //加上转义符
+//                    System.out.println("/bin/ls "+folderPath+"/"+getFullNameWithZhunayi(folderName));
+//                    String[] cmdsArray = {"/bin/ls", folderPath+"/"+getFullNameWithZhunayi(folderName)};
+//                    System.out.println(cmdsArray.toString());
+//                    Vector<String> vecstrs3 = CommandRunner.execCmdsArray(cmdsArray);
+//                    System.out.print(vecstrs3.toString());
+//
+//                    //用引号扩充空格
+//                    System.out.println("/bin/ls "+folderPath+"/"+getFullName(folderName));
+//                    cmdsArray = new String[]{"/bin/ls", folderPath+"/"+getFullName(folderName)};
+//                    System.out.println(cmdsArray.toString());
+//                    Vector<String> vecstrs2 = CommandRunner.execCmdsArray(cmdsArray);
+//                    System.out.print(vecstrs2.toString());
+//
+//                    //不修改
+//                    System.out.println("/bin/ls "+folderPath+"/"+folderName);
+//                    cmdsArray = new String[]{"/bin/ls", folderPath+"/"+folderName};
+//                    System.out.println(cmdsArray.toString());
+//                    Vector<String> vecstrs1 = CommandRunner.execCmdsArray(cmdsArray);
+//                    System.out.print(vecstrs1.toString());
 
-                    //用引号扩充空格
-                    System.out.println("/bin/ls "+folderPath+"/"+getFullName(folderName));
-                    cmdsArray = new String[]{"/bin/ls", folderPath+"/"+getFullName(folderName)};
-                    System.out.println(cmdsArray.toString());
-                    Vector<String> vecstrs2 = CommandRunner.execCmdsArray(cmdsArray);
-                    System.out.print(vecstrs2.toString());
+//                    //用引号填充两边
+//                    System.out.println("/bin/ls "+ "\""+folderPath+"/"+folderName+"\"");
+//                    cmdsArray = new String []{"/bin/ls", "\""+folderPath+"/"+folderName+"\""};
+//                    System.out.println(cmdsArray.toString());
+//                    Vector<String> vecstrs0 = CommandRunner.execCmdsArray(cmdsArray);
+//                    System.out.print(vecstrs0.toString());
 
-                    //不修改
-                    System.out.println("/bin/ls "+folderPath+"/"+folderName);
-                    cmdsArray = new String[]{"/bin/ls", folderPath+"/"+folderName};
-                    System.out.println(cmdsArray.toString());
-                    Vector<String> vecstrs1 = CommandRunner.execCmdsArray(cmdsArray);
-                    System.out.print(vecstrs1.toString());
-
-                    //用引号填充两边
-                    System.out.println("/bin/ls "+ "\""+folderPath+"/"+folderName+"\"");
-                    cmdsArray = new String []{"/bin/ls", "\""+folderPath+"/"+folderName+"\""};
-                    System.out.println(cmdsArray.toString());
-                    Vector<String> vecstrs0 = CommandRunner.execCmdsArray(cmdsArray);
-                    System.out.print(vecstrs0.toString());
-
-                    System.out.println("mv "+folderPath+"/"+getFullNameWithZhunayi(folderName)+" "+folderPath+"/"+removeBlank(folderName));
-                    Vector<String> vecstrs = CommandRunner.execCmds("mv "+folderPath+"/"+folderName+" "+folderPath+"/"+removeBlank(folderName));
+                    System.out.println("mv "+folderPath+"/"+folderName+" "+folderPath+"/"+removeBlank(folderName));
+                    String[] cmdsArray = new String [] {"mv ", folderPath+"/"+folderName+" "+folderPath+"/"+removeBlank(folderName)};
+                    Vector<String> vecstrs = CommandRunner.execCmdsArray(cmdsArray);
                     System.out.println(vecstrs.toString());
                     folderName = removeBlank(folderName);
                 }
