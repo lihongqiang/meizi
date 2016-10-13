@@ -211,7 +211,7 @@ public class CommandRunner {
     public static Vector<String> execCmdsArray(String[] cmd) {
         Vector<String> outs = new Vector<String>();
         try {
-            Process pro = Runtime.getRuntime().exec(cmd);
+            Process pro = new ProcessBuilder(cmd).start();
             pro.waitFor();
             InputStream in = pro.getInputStream();
             BufferedReader read = new BufferedReader(new InputStreamReader(in));
