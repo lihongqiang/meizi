@@ -381,8 +381,8 @@ public class UploadTool implements UploadToolInterface {
                         upload_vendor_name, uploader_name,  vendor_path, trans_path, play_path);
 
                 //删除本地文件夹
-                System.out.println("rm -rf " + folderName);
-                CommandRunner.execCmds("rm -rf " + folderName);
+                System.out.println("rm -rf " + folderPath + "/" + folderName);
+                CommandRunner.execCmds("rm -rf " + folderPath + "/" + folderName);
             }
             //删除本地upload.txt文件
 //            CommandRunner.execCmds("rm -rf " + folderPath + "/" + "upload.txt");
