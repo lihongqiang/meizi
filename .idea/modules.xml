@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/meizi.iml" filepath="$PROJECT_DIR$/meizi.iml" />
+      <module fileurl="file://$PROJECT_DIR$/meiziaccess.iml" filepath="$PROJECT_DIR$/meiziaccess.iml" />
     </modules>
   </component>
 </project>
