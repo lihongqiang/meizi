@@ -70,12 +70,15 @@ public class UploadTool implements UploadToolInterface {
         try {
             System.out.println("以行为单位读取文件内容，一次读一整行：");
             reader = new BufferedReader(new FileReader(file));
+
             String tempString = null;
             int line = 1;
             // 一次读入一行，直到读入null为文件结束
             while ((tempString = reader.readLine()) != null) {
                 // 获取上架信息
+                System.out.println(tempString);
                 String [] tmp = tempString.split(" ");
+                if(tmp.length != 2) continue;
                 map.put(tmp[0], tmp[1]);
             }
             reader.close();
@@ -334,33 +337,6 @@ public class UploadTool implements UploadToolInterface {
                 String folderName = outs.get(i).substring(0, outs.get(i).length()-1);
                 if(folderName.contains(" ")){
 
-//                    //加上转义符
-//                    System.out.println("/bin/ls "+folderPath+"/"+getFullNameWithZhunayi(folderName));
-//                    String[] cmdsArray = {"/bin/ls", folderPath+"/"+getFullNameWithZhunayi(folderName)};
-//                    System.out.println(cmdsArray.toString());
-//                    Vector<String> vecstrs3 = CommandRunner.execCmdsArray(cmdsArray);
-//                    System.out.print(vecstrs3.toString());
-//
-//                    //用引号扩充空格
-//                    System.out.println("/bin/ls "+folderPath+"/"+getFullName(folderName));
-//                    cmdsArray = new String[]{"/bin/ls", folderPath+"/"+getFullName(folderName)};
-//                    System.out.println(cmdsArray.toString());
-//                    Vector<String> vecstrs2 = CommandRunner.execCmdsArray(cmdsArray);
-//                    System.out.print(vecstrs2.toString());
-//
-//                    //不修改
-                    System.out.println("/bin/ls "+folderPath+"/"+folderName);
-                    String[] cmdsArray1 = new String[]{"/bin/ls", folderPath+"/"+folderName};
-                    Vector<String> vecstrs1 = CommandRunner.execCmdsArray(cmdsArray1);
-                    System.out.println(vecstrs1.toString());
-
-//                    //用引号填充两边
-//                    System.out.println("/bin/ls "+ "\""+folderPath+"/"+folderName+"\"");
-//                    cmdsArray = new String []{"/bin/ls", "\""+folderPath+"/"+folderName+"\""};
-//                    System.out.println(cmdsArray.toString());
-//                    Vector<String> vecstrs0 = CommandRunner.execCmdsArray(cmdsArray);
-//                    System.out.print(vecstrs0.toString());
-
                     System.out.println("/bin/mv "+folderPath+"/"+folderName+" "+folderPath+"/"+removeBlank(folderName));
                     String[] cmdsArray = new String [] {"/bin/mv", folderPath+"/"+folderName, folderPath+"/"+removeBlank(folderName)};
                     Vector<String> vecstrs = CommandRunner.execCmdsArray(cmdsArray);
@@ -384,10 +360,15 @@ public class UploadTool implements UploadToolInterface {
                 System.out.println("rm -rf " + folderPath + "/" + folderName);
                 CommandRunner.execCmds("rm -rf " + folderPath + "/" + folderName);
             }
-            //删除本地upload.txt文件
-//            CommandRunner.execCmds("rm -rf " + folderPath + "/" + "upload.txt");
         }
         return true;
     }
+
+//    public  static void main(String[] args){
+//        String filePath = "C:\\Users\\user-u1\\Desktop\\upload.txt";
+//        UploadTool tool = new UploadTool();
+//        Map<String, String> map = tool.readFile(filePath);
+//        System.out.println(map.get("price") + "  " + map.get("copyright"));
+//    }
 
 }
