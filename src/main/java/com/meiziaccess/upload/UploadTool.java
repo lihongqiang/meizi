@@ -367,47 +367,13 @@ public class UploadTool implements UploadToolInterface {
         return true;
     }
 
-//    public  static void main(String[] args){
-//        String filePath = "C:\\Users\\user-u1\\Desktop\\upload.txt";
-//        UploadTool tool = new UploadTool();
-//        Map<String, String> map = tool.readFile(filePath);
-//        System.out.println(map.get("price") + "  " + map.get("copyright"));
-//    }
-
-    public static List<UploadItem> getUploadItems(String folderPath){
-
+    public  static List<UploadItem> getUploadItems(String path){
         List<UploadItem> list = new ArrayList<>();
-
-        UploadTool tool = new UploadTool();
-        //查看系统
-        String osName = tool.getOSName();
-        if(osName.equals("Windows")){
-            //获取文件列表
-            Vector<String> outs = CommandRunner.execCmds("cmd /c dir " + folderPath + " /B");
-            for(int i=0; i<outs.size(); i++){
-                String folderName = outs.get(i);
-                UploadItem item = new UploadItem(folderName, getMD5(folderName));
-                list.add(item);
-            }
-        }else{
-            //获取文件列表
-            Vector<String> outs = CommandRunner.execCmds("/bin/ls -F " + folderPath + " | grep '/$' ");
-            for(int i=1; i<outs.size(); i++){
-
-                //文件夹名是否含有~
-                if(outs.get(i).charAt(0)=='~' || outs.get(i).charAt(0) == '.') continue;
-                System.out.println(""+i+": "+outs.get(i));
-
-                //文件夹名是否含有空格
-                String folderName = outs.get(i).substring(0, outs.get(i).length()-1);
-                if(folderName.contains(" ")){
-                    String[] cmdsArray = new String [] {"/bin/mv -rf", folderPath+"/"+folderName, folderPath+"/"+removeBlank(folderName)};
-                    Vector<String> vecstrs = CommandRunner.execCmdsArray(cmdsArray);
-                    folderName = removeBlank(folderName);
-                }
-
-                UploadItem item = new UploadItem(folderName, getMD5(folderName));
-                list.add(item);
+        File file = new File(path);
+        File[] tempList = file.listFiles();
+        for (int i = 0; i < tempList.length; i++) {
+            if (tempList[i].isDirectory()) {
+                list.add(new UploadItem(tempList[i].getName(), getMD5(tempList[i].getName()), tempList[i].getPath()));
             }
         }
         return list;
@@ -430,11 +396,11 @@ public class UploadTool implements UploadToolInterface {
 
     public static List<UploadItem> getTestData(){
         List<UploadItem> list = new ArrayList<>();
-        UploadItem item0 = new UploadItem(false, "长征 第1集", "2016/11/1 14:39", 600, 0, 100, 0, 5, UploadTool.getMD5("长征 第1集"));
-        UploadItem item1 = new UploadItem(false, "长征 第2集", "2016/11/1 14:39", 600, 1, 10, 0, 5, UploadTool.getMD5("长征 第2集"));
-        UploadItem item2 = new UploadItem(false, "长征 第3集", "2016/11/1 14:39", 600, 0, 100, 0, 5, UploadTool.getMD5("长征 第3集"));
-        UploadItem item3 = new UploadItem(false, "长征 第4集", "2016/11/1 14:39", 600, 0, 100, 0, 5, UploadTool.getMD5("长征 第4集"));
-        UploadItem item4 = new UploadItem(false, "长征 第5集", "2016/11/1 14:39", 600, 0, 100, 0, 5, UploadTool.getMD5("长征 第5集"));
+        UploadItem item0 = new UploadItem(false, "长征 第1集", "2016/11/1 14:39", 600, 0, 100, 0, 5, UploadTool.getMD5("长征 第1集"), "");
+        UploadItem item1 = new UploadItem(false, "长征 第2集", "2016/11/1 14:39", 600, 1, 10, 0, 5, UploadTool.getMD5("长征 第2集"), "");
+        UploadItem item2 = new UploadItem(false, "长征 第3集", "2016/11/1 14:39", 600, 0, 100, 0, 5, UploadTool.getMD5("长征 第3集"), "");
+        UploadItem item3 = new UploadItem(false, "长征 第4集", "2016/11/1 14:39", 600, 0, 100, 0, 5, UploadTool.getMD5("长征 第4集"), "");
+        UploadItem item4 = new UploadItem(false, "长征 第5集", "2016/11/1 14:39", 600, 0, 100, 0, 5, UploadTool.getMD5("长征 第5集"), "");
         list.add(item0);
         list.add(item1);
         list.add(item2);
@@ -443,11 +409,20 @@ public class UploadTool implements UploadToolInterface {
         return list;
     }
 
-//    public static void main(String[] args){
-//        UploadTool tool = new UploadTool();
-//        List<UploadItem> list = tool.getUploadItems("E:\\program\\媒资\\data\\低码");
-//        for(int i=0; i<list.size(); i++){
-//            System.out.println(list.get(i).getTitle());
+//    public static void main(String[] args) {
+////        UploadTool tool = new UploadTool();
+////        List<UploadItem> list = tool.getUploadItems("E:\\program\\媒资\\data\\低码");
+//        String path = "E:\\program\\媒资\\data\\低码";
+//        File file = new File(path);
+//        File[] tempList = file.listFiles();
+//        for (int i = 0; i < tempList.length; i++) {
+//            if (tempList[i].isFile()) {
+//                System.out.println("文     件：" + tempList[i]);
+//            }
+//            if (tempList[i].isDirectory()) {
+//                System.out.println("文件夹：" + tempList[i].getName());
+//                System.out.println("文件夹：" + tempList[i].getPath());
+//            }
 //        }
 //    }
 }

@@ -20,6 +20,7 @@
 //    });
     $(document).ready(function(){
         var table = $('#upload_data').DataTable({
+//            ajax: "http://localhost:8080/data-source",
             ajax: "http://162.105.16.229:9921/data-source",
             columns:[
                 { data: 'upload'},
