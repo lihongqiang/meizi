@@ -27,7 +27,10 @@ angular.module('hello', [ 'ngRoute' ]).config(function($routeProvider, $httpProv
                 var data = credentials ? {
                     "username": credentials.username,
                     "password": credentials.password
-                } : {};
+                } : {
+					"username": "",
+					"password": ""
+				};
 
 				$http.get('authenticate', {
 					params : data
@@ -74,7 +77,7 @@ angular.module('hello', [ 'ngRoute' ]).config(function($routeProvider, $httpProv
 				});
 			}
 
-		}).controller('home', function($http) {
+		}).controller('home', function($http, $rootScope) {
 			var self = this;
 			$http.get('/resource/').then(function(response) {
 				self.greeting = response.data;

@@ -35,6 +35,16 @@
     <!-- Custom styles for this template -->
     <link href="bootstrap-3.3.7/docs/examples/jumbotron/jumbotron.css" rel="stylesheet">
 
+    <!-- DataTables CSS -->
+    <!--<link rel="stylesheet" type="text/css" href="css/jquery.dataTables.css">-->
+    <!--<link rel="stylesheet" type="text/css" href="css/dataTables.bootstrap.css">-->
+
+    <!--&lt;!&ndash; jQuery &ndash;&gt;-->
+    <!--<script type="text/javascript" charset="utf8" src="js/jquery.js"></script>-->
+    <!--<script type="text/javascript" charset="utf8" src="js/dataTables.bootstrap.js"></script>-->
+
+    <!--&lt;!&ndash; DataTables &ndash;&gt;-->
+    <!--<script type="text/javascript" charset="utf8" src="js/jquery.dataTables.js"></script>-->
 
 </head>
 <head>
@@ -63,7 +73,7 @@
                 </button>
                 <a class="navbar-brand" href="#/">接入服务器</a>
             </div>
-            <div  ng-controller="navigation as nav" id="navbar" class="navbar-collapse collapse">
+            <div  ng-controller="navigation as nav" id="navbar" class="navbar-collapse collapse" >
                 <ul class="nav navbar-nav" role="tablist">
                     <li ng-class="{active:nav.tab('home')}" class="active"><a href="#/">主页</a></li>
                     <li><a href="#about">关于</a></li>
@@ -75,7 +85,8 @@
                 </ul>
             </div><!--/.nav-collapse -->
         </div>
-    </nav>
+
+</nav>
 
     <div ng-view class="container"></div>
 
@@ -88,7 +99,7 @@
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>-->
     <script>window.jQuery || document.write('<script src="bootstrap-3.3.7/docs/assets/js/vendor/jquery.min.js"><\/script>')</script>
     <script src="bootstrap-3.3.7/docs/dist/js/bootstrap.min.js"></script>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->

@@ -1,36 +1,16 @@
 package com.meiziaccess;
 
-import com.meiziaccess.service.UploadService;
-import com.meiziaccess.uploadModel.UploadLogRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
+import com.meiziaccess.model.UploadItem;
+import com.meiziaccess.upload.UploadTool;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistration;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.thymeleaf.spring4.SpringTemplateEngine;
-import org.thymeleaf.spring4.resourceresolver.SpringResourceResourceResolver;
-import org.thymeleaf.spring4.view.ThymeleafViewResolver;
-import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
-import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
-import org.thymeleaf.templateresolver.TemplateResolver;
 
-import javax.annotation.PostConstruct;
 import javax.validation.constraints.Null;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 
 @SpringBootApplication
@@ -41,10 +21,14 @@ public class MeiziaccessApplication  {
 	@RequestMapping("/authenticate")
 	public Map<String, Object> authenticate(String username, String password){
 		Map<String, Object> model = new HashMap<String, Object>();
-		if(username.equals("lhq") && password.equals("lhq")){
-			model.put("status", true);
-		}else{
+		if(username == null || password == null){
 			model.put("status", false);
+		}else{
+			if(username.equals("lhq") && password.equals("lhq")){
+				model.put("status", true);
+			}else{
+				model.put("status", false);
+			}
 		}
 		return model;
 	}
@@ -55,6 +39,19 @@ public class MeiziaccessApplication  {
 		model.put("id", UUID.randomUUID().toString());
 		model.put("content", "Hello World");
 		return model;
+	}
+
+	@Value("${configure.upload.local_path}")
+	private String upload_local_path;
+
+	@RequestMapping("/data-source")
+	@ResponseBody
+	public Map<String, Object> getItems() {
+		Map<String, Object> map = new HashMap<>();
+		List<UploadItem> list = UploadTool.getUploadItems(upload_local_path);
+//		List<UploadItem> list = UploadTool.getUploadItems("E:\\program\\媒资\\data\\低码");
+		map.put("data", list);
+		return map;
 	}
 
 	public static void main(String[] args) {

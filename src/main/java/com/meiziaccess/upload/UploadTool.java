@@ -1,6 +1,7 @@
 package com.meiziaccess.upload;
 
 import com.meiziaccess.CommandTool.CommandRunner;
+import com.meiziaccess.model.UploadItem;
 import com.meiziaccess.task.MyScheduledTasks;
 import com.meiziaccess.uploadModel.UploadLog;
 import com.meiziaccess.uploadModel.UploadLogRepository;
@@ -8,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.io.*;
+import java.math.BigInteger;
+import java.security.MessageDigest;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -150,7 +153,7 @@ public class UploadTool implements UploadToolInterface {
         return true;
     }
 
-    public String removeBlank(String s){
+    public static String removeBlank(String s){
         String ans="";
         for(int i=0; i<s.length(); i++){
             if(s.charAt(i) != ' '){
@@ -371,4 +374,81 @@ public class UploadTool implements UploadToolInterface {
 //        System.out.println(map.get("price") + "  " + map.get("copyright"));
 //    }
 
+    public static List<UploadItem> getUploadItems(String folderPath){
+
+        List<UploadItem> list = new ArrayList<>();
+
+        UploadTool tool = new UploadTool();
+        //查看系统
+        String osName = tool.getOSName();
+        if(osName.equals("Windows")){
+            //获取文件列表
+            Vector<String> outs = CommandRunner.execCmds("cmd /c dir " + folderPath + " /B");
+            for(int i=0; i<outs.size(); i++){
+                String folderName = outs.get(i);
+                UploadItem item = new UploadItem(folderName, getMD5(folderName));
+                list.add(item);
+            }
+        }else{
+            //获取文件列表
+            Vector<String> outs = CommandRunner.execCmds("/bin/ls -F " + folderPath + " | grep '/$' ");
+            for(int i=0; i<outs.size(); i++){
+
+                //文件夹名是否含有~
+                if(outs.get(i).charAt(0)=='~') continue;
+                System.out.println(""+i+": "+outs.get(i));
+
+                //文件夹名是否含有空格
+                String folderName = outs.get(i).substring(0, outs.get(i).length()-1);
+                if(folderName.contains(" ")){
+                    String[] cmdsArray = new String [] {"/bin/mv -rf", folderPath+"/"+folderName, folderPath+"/"+removeBlank(folderName)};
+                    Vector<String> vecstrs = CommandRunner.execCmdsArray(cmdsArray);
+                    System.out.println(vecstrs.toString());
+                    folderName = removeBlank(folderName);
+                }
+
+                UploadItem item = new UploadItem(folderName, getMD5(folderName));
+                list.add(item);
+            }
+        }
+        return list;
+    }
+
+    public static String getMD5(String str) {
+        try {
+            // 生成一个MD5加密计算摘要
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            // 计算md5函数
+            md.update(str.getBytes());
+            // digest()最后确定返回md5 hash值，返回值为8字符串。因为md5 hash值是16位的hex值，实际上就是8位的字符
+            // BigInteger函数则将8位的字符串转换成16位hex值，用字符串来表示；得到字符串形式的hash值
+            return new BigInteger(1, md.digest()).toString(16);
+        } catch (Exception e) {
+            System.out.println("MD5加密出现错误");
+        }
+        return "";
+    }
+
+    public static List<UploadItem> getTestData(){
+        List<UploadItem> list = new ArrayList<>();
+        UploadItem item0 = new UploadItem(false, "长征 第1集", "2016/11/1 14:39", 600, 0, 100, 0, 5, UploadTool.getMD5("长征 第1集"));
+        UploadItem item1 = new UploadItem(false, "长征 第2集", "2016/11/1 14:39", 600, 1, 10, 0, 5, UploadTool.getMD5("长征 第2集"));
+        UploadItem item2 = new UploadItem(false, "长征 第3集", "2016/11/1 14:39", 600, 0, 100, 0, 5, UploadTool.getMD5("长征 第3集"));
+        UploadItem item3 = new UploadItem(false, "长征 第4集", "2016/11/1 14:39", 600, 0, 100, 0, 5, UploadTool.getMD5("长征 第4集"));
+        UploadItem item4 = new UploadItem(false, "长征 第5集", "2016/11/1 14:39", 600, 0, 100, 0, 5, UploadTool.getMD5("长征 第5集"));
+        list.add(item0);
+        list.add(item1);
+        list.add(item2);
+        list.add(item3);
+        list.add(item4);
+        return list;
+    }
+
+//    public static void main(String[] args){
+//        UploadTool tool = new UploadTool();
+//        List<UploadItem> list = tool.getUploadItems("E:\\program\\媒资\\data\\低码");
+//        for(int i=0; i<list.size(); i++){
+//            System.out.println(list.get(i).getTitle());
+//        }
+//    }
 }
