@@ -409,6 +409,55 @@ public class UploadTool implements UploadToolInterface {
         return list;
     }
 
+    public boolean uploadItemDirs(String upload_remote_path, List<UploadItem> list){
+
+        Date date = new Date();
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String day = dateFormat.format(date);
+        String remote_full_path = upload_remote_path + "/" + day;
+
+        //创建远程文件夹
+        System.out.println("/bin/mkdir " + remote_full_path );
+        try {
+            CommandRunner.runSSH( "/bin/mkdir " + remote_full_path );
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        //上传文件夹列表
+        for(int i=0; i<list.size(); i++){
+
+            //创建远程文件夹
+//            String folderName = outs.get(i).substring(0, outs.get(i).length()-1);
+//            if(folderName.contains(" ")){
+//
+//                System.out.println("/bin/mv "+folderPath+"/"+folderName+" "+folderPath+"/"+removeBlank(folderName));
+//                String[] cmdsArray = new String [] {"/bin/mv", folderPath+"/"+folderName, folderPath+"/"+removeBlank(folderName)};
+//                Vector<String> vecstrs = CommandRunner.execCmdsArray(cmdsArray);
+//                System.out.println(vecstrs.toString());
+//                folderName = removeBlank(folderName);
+//            }
+//            System.out.println("/bin/mkdir " + remote_full_path + "/" + folderName );
+//
+//            try {
+//                CommandRunner.runSSH("/bin/mkdir " + remote_full_path + "/" + folderName);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//
+//            //上传和删除文件
+//            System.out.println("localPath="+folderPath+"/"+folderName);
+//            System.out.println("remotePath="+remote_full_path + "/" + folderName);
+//            uploadFile(folderPath+"/"+folderName, uploadLogRepository, remote_full_path + "/" + folderName,
+//                    upload_vendor_name, uploader_name,  vendor_path, trans_path, play_path);
+//
+//            //删除本地文件夹
+//            System.out.println("rm -rf " + folderPath + "/" + folderName);
+//            CommandRunner.execCmds("rm -rf " + folderPath + "/" + folderName);
+        }
+        return true;
+    }
+
 //    public static void main(String[] args) {
 ////        UploadTool tool = new UploadTool();
 ////        List<UploadItem> list = tool.getUploadItems("E:\\program\\媒资\\data\\低码");
