@@ -395,7 +395,7 @@ public class UploadTool implements UploadToolInterface {
             for(int i=0; i<outs.size(); i++){
 
                 //文件夹名是否含有~
-                if(outs.get(i).charAt(0)=='~') continue;
+                if(outs.get(i).charAt(0)=='~' || outs.get(i).charAt(0) == '.') continue;
                 System.out.println(""+i+": "+outs.get(i));
 
                 //文件夹名是否含有空格
@@ -403,10 +403,11 @@ public class UploadTool implements UploadToolInterface {
                 if(folderName.contains(" ")){
                     String[] cmdsArray = new String [] {"/bin/mv -rf", folderPath+"/"+folderName, folderPath+"/"+removeBlank(folderName)};
                     Vector<String> vecstrs = CommandRunner.execCmdsArray(cmdsArray);
-                    System.out.println(vecstrs.toString());
+
                     folderName = removeBlank(folderName);
                 }
 
+                System.out.println(folderName);
                 UploadItem item = new UploadItem(folderName, getMD5(folderName));
                 list.add(item);
             }
