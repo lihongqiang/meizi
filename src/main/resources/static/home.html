@@ -128,7 +128,7 @@
                 console.log(d);
                 $.ajax({
                     type: "post",
-                    url: '/upload',
+                    url: 'http://162.105.16.229:9921/upload',
                     async: true, // 使用同步方式
                     // 1 需要使用JSON.stringify 否则格式为 a=2&b=3&now=14...
                     // 2 需要强制类型转换，否则格式为 {"a":"2","b":"3"}
