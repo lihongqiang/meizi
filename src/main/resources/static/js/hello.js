@@ -82,4 +82,9 @@ angular.module('hello', [ 'ngRoute' ]).config(function($routeProvider, $httpProv
 			$http.get('/resource/').then(function(response) {
 				self.greeting = response.data;
 			})
+			$rootScope.upload = function(data){
+				$http.post('/upload', data).finally(function(){
+
+				});
+			}
 });

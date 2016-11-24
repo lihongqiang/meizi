@@ -1,10 +1,15 @@
 package com.meiziaccess.upload;
 
+import com.jcraft.jsch.ChannelSftp;
+import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.SftpException;
 import com.meiziaccess.CommandTool.CommandRunner;
+import com.meiziaccess.CommandTool.SftpUtil;
 import com.meiziaccess.model.UploadItem;
 import com.meiziaccess.task.MyScheduledTasks;
 import com.meiziaccess.uploadModel.UploadLog;
 import com.meiziaccess.uploadModel.UploadLogRepository;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -12,6 +17,7 @@ import java.io.*;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.SynchronousQueue;
@@ -46,7 +52,7 @@ public class UploadTool implements UploadToolInterface {
 
     @Override
     public boolean checkFolder(String floderPath) {
-        //查看系统
+        //??????
         String osName = getOSName();
 
         Vector<String> outs;
@@ -55,7 +61,7 @@ public class UploadTool implements UploadToolInterface {
         }else {
             outs = CommandRunner.execCmds("/bin/ls  " + floderPath );
         }
-        if(!outs.isEmpty()){ //文件夹有文件
+        if(!outs.isEmpty()){ //?????????
             return true;
         }else{
             return false;
@@ -63,22 +69,22 @@ public class UploadTool implements UploadToolInterface {
     }
 
     /**
-     * 以行为单位读取文件，常用于读面向行的格式化文件
-     * 获取上架信息
+     * ???????????????????????????????????
+     * ?????????
      */
     public  Map<String, String> readFile(String fileName)  {
         Map<String, String> map = new HashMap<String, String>();
         File file = new File(fileName);
         BufferedReader reader = null;
         try {
-            System.out.println("以行为单位读取文件内容，一次读一整行：");
+            System.out.println("??????????????????????????????");
             reader = new BufferedReader(new FileReader(file));
 
             String tempString = null;
             int line = 1;
-            // 一次读入一行，直到读入null为文件结束
+            // ?????????????????null????????
             while ((tempString = reader.readLine()) != null) {
-                // 获取上架信息
+                // ?????????
                 System.out.println(tempString);
                 String [] tmp = tempString.split(" ");
                 if(tmp.length != 2) continue;
@@ -99,12 +105,13 @@ public class UploadTool implements UploadToolInterface {
         return map;
     }
 
-    public boolean updateDatabase(String folderPath, String xmlName, String videoName, UploadLogRepository uploadLogRepository,
+
+    public boolean updateDatabase_total(String folderPath, String xmlName, String videoName, UploadLogRepository uploadLogRepository,
                                   String upload_remote_path,String upload_vendor_name, String uploader_name, String vendor_path,
                                   String trans_path, String play_path) {
 
         Map<String, String> map = new HashMap<String, String>();
-        //获取上架信息:price copyright
+        //?????????:price copyright
         try {
              map = readFile(folderPath + "/upload.txt");
         } catch (Exception e) {
@@ -116,7 +123,7 @@ public class UploadTool implements UploadToolInterface {
             System.out.println("uploadLogRepository is null");
         }
 
-        //查找高码视频地址
+        //????????????
         String higeCodeVideoName = "";
         String[] cmdsArray = new String[]{"/bin/ls", vendor_path};
         System.out.println("/bin/ls "+vendor_path);
@@ -133,19 +140,21 @@ public class UploadTool implements UploadToolInterface {
             }
         }
 
-        //修改数据库信息
+        //???????????
         UploadLog log = new UploadLog(upload_vendor_name,
                                     new Date(),
                                     uploader_name,
-                                    upload_remote_path +"/"+ xmlName ,          //xml上传路径
-                                    upload_remote_path +"/"+ videoName,         //vedio上传路径
-                                    vendor_path + "/"+higeCodeVideoName,        //高码视频路径
-                                    Double.parseDouble(map.get("price")),   //价格
-                                    map.get("copyright"));
-        //xml转换路径
+                                    upload_remote_path +"/"+ xmlName ,          //xml??????
+                                    upload_remote_path +"/"+ videoName,         //vedio??????
+                                    vendor_path + "/"+higeCodeVideoName,        //?????????
+                                    Double.parseDouble(map.get("price")),   //???
+                                    "RF",
+                                    1,
+                                    5);
+        //xml??????
         log.setXml_trans_path(trans_path + "/" +"trans_"+new Date().getTime()+"_"+xmlName);
 
-        //视频转换成mp4播放路径
+        //????????p4??????
         String videoTransName = videoName.split("\\.")[0] + ".mp4";
         log.setVideo_play_path(play_path+"/"+videoTransName);
 
@@ -199,41 +208,41 @@ public class UploadTool implements UploadToolInterface {
             return false;
         }
 
-        //查看系统
+        //??????
         String osName = getOSName();
-        //获取文件列表
+        //?????????
         Vector<String> outs;
-        if(osName.equals("Windows")){               //如果系统是windows，需要下载pscp程序，添加到path中
-            //上传文件
+        if(osName.equals("Windows")){               //????????indows????????scp?????????path??
+            //??????
 //            outs = CommandRunner.execCmds("cmd /c dir " + folderPath +" /a-d /b " );
 //            String xmlName="", videoName="";
 //            for(int i=0; i<outs.size(); i++){
 //                String[] file = outs.get(i).split("\\.");
-//                //判断是否是xml文件
+//                //????????ml???
 //                if(file[file.length-1].equals("xml")){
 //                    xmlName = outs.get(i);
 //
-//                    //上传xml文件
+//                    //???xml???
 //                    CommandRunner.execCmds("pscp -P 10722 -pw pkulky201 " + folderPath + "\\" + outs.get(i) + " derc@162.105.180.15:" + upload_remote_path);
 //                }else{
 //                    if(outs.get(i).equals("upload.txt")){
 //                        continue;
 //                    }else{
 //                        videoName = outs.get(i);
-//                        //上传视频
+//                        //??????
 //                        CommandRunner.execCmds("pscp -P 10722 -pw pkulky201 " + folderPath + "\\" + outs.get(i) + " derc@162.105.180.15:" + upload_remote_path );
 //                    }
 //                }
-//                //删除文件
+//                //??????
 //                System.out.println("cmd /c del " + folderPath + "\\" + outs.get(i));
 //                CommandRunner.execCmds("cmd /c del " + folderPath + "\\" + outs.get(i));
 //            }
 //
-//            //更新数据库
+//            //????????
 //            updateDatabase(folderPath, xmlName, videoName, uploadLogRepository,  upload_remote_path,
 //                    upload_vendor_name,  uploader_name,  vendor_path);
 //
-//            //删除upload.txt文件
+//            //???upload.txt???
 //            CommandRunner.execCmds("cmd /c del " + folderPath + "\\" + "upload.txt");
 
         }else {
@@ -256,16 +265,16 @@ public class UploadTool implements UploadToolInterface {
                     outs.set(i, removeBlank(outs.get(i)));
                 }
 
-                //判断是否是xml文件
+                //????????ml???
                 if(file[file.length-1].equals("xml")){
                     xmlName = outs.get(i);
-                    //上传xml文件
+                    //???xml???
 //                    CommandRunner.execCmds("scp -P 10722 " + folderPath + "/" + outs.get(i) + " derc@162.105.180.15:" + upload_remote_path );
                 }else{
                     if(outs.get(i).equals("upload.txt")){
                         continue;
                     }else{
-                        //上传视频
+                        //??????
 //                        CommandRunner.execCmds("scp -P 10722 " + folderPath + "/" + outs.get(i) + " derc@162.105.180.15:" + upload_remote_path );
                         videoName = outs.get(i);
                     }
@@ -276,14 +285,14 @@ public class UploadTool implements UploadToolInterface {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                //删除文件
+                //??????
                 System.out.println("rm " + folderPath + "/" + outs.get(i));
 //                CommandRunner.execCmds("rm " + folderPath + "/" + outs.get(i));
             }
-            //更新数据库
-            updateDatabase(folderPath, xmlName , videoName, uploadLogRepository,  upload_remote_path,
+            //????????
+            updateDatabase_total(folderPath, xmlName , videoName, uploadLogRepository,  upload_remote_path,
                     upload_vendor_name,  uploader_name,  vendor_path, trans_path, play_path );
-            //删除upload.txt文件
+            //???upload.txt???
 //            CommandRunner.execCmds("rm " + folderPath + "/" + "upload.txt");
         }
         return true;
@@ -297,12 +306,12 @@ public class UploadTool implements UploadToolInterface {
         String day = dateFormat.format(date);
         String remote_full_path = upload_remote_path + "/" + day;
 
-        //查看系统
+        //??????
         String osName = getOSName();
-        //获取文件列表
+        //?????????
         Vector<String> outs;
-        if(osName.equals("Windows")){               //如果系统是windows，需要下载pscp程序，添加到path中
-            //创建文件夹，文件夹不存在，第一次复制创建日期文件夹，第二次开始复制文件夹
+        if(osName.equals("Windows")){               //????????indows????????scp?????????path??
+            //???????????????????????????????????????????????????????
 //            System.out.println("/bin/mkdir " + remote_full_path );
 //            try {
 //                CommandRunner.runSSH( "/bin/mkdir " + remote_full_path );
@@ -310,33 +319,33 @@ public class UploadTool implements UploadToolInterface {
 //                e.printStackTrace();
 //            }
 ////            CommandRunner.execCmds("pscp -P 10722 -pw pkulky201 -r " + folderPath  + " derc@162.105.180.15:" + remote_full_path);
-//            //获取上传路径中的所有文件夹
+//            //????????????????????
 //            outs = CommandRunner.execCmds("cmd /c dir " + folderPath +" /ad /b " );
 //            for(int i=0; i<outs.size(); i++){
-//                //上传文件夹
+//                //????????
 //                CommandRunner.execCmds("pscp -P 10722 -pw pkulky201 -r " + folderPath + "\\" + outs.get(i) + " derc@162.105.180.15:" + remote_full_path);
-//                //删除文件夹
+//                //????????
 //                System.out.println("cmd /c rd /s/q  " + folderPath + "\\" + outs.get(i));
 //                CommandRunner.execCmds("cmd /c rd /s/q " + folderPath + "\\" + outs.get(i));
 //            }
-//            //删除upload.txt文件
+//            //???upload.txt???
 //            CommandRunner.execCmds("cmd /c del " + folderPath + "\\" + "upload.txt");
         }else {
-            //创建远程文件夹
+            //???????????
             System.out.println("/bin/mkdir " + remote_full_path );
             try {
                 CommandRunner.runSSH( "/bin/mkdir " + remote_full_path );
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            //查看文件夹列表
+            //???????????
             outs = CommandRunner.execCmds("/bin/ls -F " + folderPath + " | grep '/$' ");
             System.out.println("/bin/ls -F " + folderPath + " | grep '/$' ");
             for(int i=0; i<outs.size(); i++){
                 if(outs.get(i).charAt(outs.get(i).length()-1)==':') continue;
                 System.out.println(""+i+": "+outs.get(i));
 
-                //创建远程文件夹
+                //???????????
                 String folderName = outs.get(i).substring(0, outs.get(i).length()-1);
                 if(folderName.contains(" ")){
 
@@ -353,13 +362,13 @@ public class UploadTool implements UploadToolInterface {
                     e.printStackTrace();
                 }
 
-                //上传和删除文件
+                //???????????
                 System.out.println("localPath="+folderPath+"/"+folderName);
                 System.out.println("remotePath="+remote_full_path + "/" + folderName);
                 uploadFile(folderPath+"/"+folderName, uploadLogRepository, remote_full_path + "/" + folderName,
                         upload_vendor_name, uploader_name,  vendor_path, trans_path, play_path);
 
-                //删除本地文件夹
+                //???????????
                 System.out.println("rm -rf " + folderPath + "/" + folderName);
                 CommandRunner.execCmds("rm -rf " + folderPath + "/" + folderName);
             }
@@ -381,26 +390,24 @@ public class UploadTool implements UploadToolInterface {
 
     public static String getMD5(String str) {
         try {
-            // 生成一个MD5加密计算摘要
+            // ???????D5?????????
             MessageDigest md = MessageDigest.getInstance("MD5");
-            // 计算md5函数
             md.update(str.getBytes());
-            // digest()最后确定返回md5 hash值，返回值为8字符串。因为md5 hash值是16位的hex值，实际上就是8位的字符
-            // BigInteger函数则将8位的字符串转换成16位hex值，用字符串来表示；得到字符串形式的hash值
+
             return new BigInteger(1, md.digest()).toString(16);
         } catch (Exception e) {
-            System.out.println("MD5加密出现错误");
+            System.out.println("MD5?????????");
         }
         return "";
     }
 
     public static List<UploadItem> getTestData(){
         List<UploadItem> list = new ArrayList<>();
-        UploadItem item0 = new UploadItem(false, "长征 第1集", "2016/11/1 14:39", 600, 0, 100, 0, 5, UploadTool.getMD5("长征 第1集"), "");
-        UploadItem item1 = new UploadItem(false, "长征 第2集", "2016/11/1 14:39", 600, 1, 10, 0, 5, UploadTool.getMD5("长征 第2集"), "");
-        UploadItem item2 = new UploadItem(false, "长征 第3集", "2016/11/1 14:39", 600, 0, 100, 0, 5, UploadTool.getMD5("长征 第3集"), "");
-        UploadItem item3 = new UploadItem(false, "长征 第4集", "2016/11/1 14:39", 600, 0, 100, 0, 5, UploadTool.getMD5("长征 第4集"), "");
-        UploadItem item4 = new UploadItem(false, "长征 第5集", "2016/11/1 14:39", 600, 0, 100, 0, 5, UploadTool.getMD5("长征 第5集"), "");
+        UploadItem item0 = new UploadItem(false, "??? ??1??", new Date(), 600, 0, 100, "RM", 0, UploadTool.getMD5("??? ??1??"), "");
+        UploadItem item1 = new UploadItem(false, "??? ??2??",  new Date(), 600, 1, 10, "RM", 0, UploadTool.getMD5("??? ??2??"), "");
+        UploadItem item2 = new UploadItem(false, "??? ??3??",  new Date(), 600, 0, 100, "RM", 0, UploadTool.getMD5("??? ??3??"), "");
+        UploadItem item3 = new UploadItem(false, "??? ??4??",  new Date(), 600, 0, 100, "RM", 0, UploadTool.getMD5("??? ??4??"), "");
+        UploadItem item4 = new UploadItem(false, "??? ??5??",  new Date(), 600, 0, 100, "RM", 0, UploadTool.getMD5("??? ??5??"), "");
         list.add(item0);
         list.add(item1);
         list.add(item2);
@@ -409,68 +416,149 @@ public class UploadTool implements UploadToolInterface {
         return list;
     }
 
-    public boolean uploadItemDirs(String upload_remote_path, List<UploadItem> list){
+    public  boolean uploadItems( String fileDir,  String remotePath,  ChannelSftp sftp,
+                                UploadLogRepository uploadLogRepository ,String upload_vendor_name,
+                                String vendorPath, String uploader_name,  String trans_path,
+                                String play_path, UploadItem item){
+
+        //???????????
+        File file = new File(fileDir);
+        File[] tempList = file.listFiles();
+
+        //??????????
+        List<String> xmlName = new ArrayList<>();            //xml,???,??????
+        String videoName = "";          //???
+        List<String> keyFrames = new ArrayList<>();          //?????,???,??????
+
+
+        for (int i = 0; i < tempList.length; i++) {
+            if (tempList[i].isFile()) {
+                try {
+
+                    //??????????
+                    //xml
+                    if(tempList[i].getName().endsWith(".xml")){
+                        xmlName.add(tempList[i].getName());
+                    }else if(tempList[i].getName().endsWith(".jpg")){
+                        keyFrames.add(tempList[i].getName());
+                    }else{
+                        videoName = tempList[i].getName();
+                        vendorPath = tempList[i].getPath();     //??????
+                    }
+
+                    //?????
+                    SftpUtil.uploadFile(tempList[i].getPath(), remotePath, tempList[i].getName(), sftp);
+
+                } catch (SftpException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        //????????
+        updateDatabase( xmlName, videoName, uploadLogRepository,  remotePath,
+                upload_vendor_name,  uploader_name,  vendorPath, trans_path, play_path, item );
+        return true;
+    }
+    public boolean updateDatabase(List<String> xmlName, String videoName, UploadLogRepository uploadLogRepository,
+                                  String upload_remote_path,String upload_vendor_name, String uploader_name, String vendor_path,
+                                  String trans_path, String play_path, UploadItem item) {
+
+        //????????????
+//        String higeCodeVideoName = "";
+//        String[] cmdsArray = new String[]{"/bin/ls", vendor_path};
+//        System.out.println("/bin/ls "+vendor_path);
+//        Vector<String> lists = CommandRunner.execCmdsArray(cmdsArray);
+//        System.out.println(lists.toString());
+//        String videoNameWithFormat = videoName.substring(0, videoName.lastIndexOf("."));
+//        for(String s : lists){
+//            String fileName = s.substring(0, s.lastIndexOf("."));
+//            System.out.println(fileName + "   " + videoNameWithFormat);
+//            if(fileName.equals(videoNameWithFormat)){
+//                System.out.println(s);
+//                higeCodeVideoName = s;
+//                break;
+//            }
+//        }
+
+        //xml??????,???
+        for(int i=0; i<xmlName.size(); i++){
+            xmlName.set(i, upload_remote_path + "/" + xmlName.get(i));
+        }
+        String xmlPath = StringUtils.join(xmlName, ',');
+
+        //???????????
+        UploadLog log = new UploadLog(
+                upload_vendor_name,
+                new Date(),
+                uploader_name,
+                xmlPath ,          //xml
+                upload_remote_path +"/"+ videoName,         //video
+                vendor_path,        //?????????
+                item.getPrice(),   //???
+                item.getCopyright_type(),   //??????
+                item.getPrice_type(),   //??????
+                item.getCopyright_duration()    //?????
+        );
+        log.setXml_trans_path(trans_path + "/" +"trans_"+new Date().getTime()+"_"+xmlName);
+
+        String videoTransName = videoName.split("\\.")[0] + ".mp4";
+        log.setVideo_play_path(play_path+"/"+videoTransName);
+
+        uploadLogRepository.save(log);
+        return true;
+    }
+
+    public boolean uploadItemDirs(String upload_remote_path, List<UploadItem> list,
+                                  UploadLogRepository uploadLogRepository ,String upload_vendor_name,
+                                  String vendorPath, String uploader_name,  String trans_path,
+                                  String play_path){
 
         Date date = new Date();
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String day = dateFormat.format(date);
         String remote_full_path = upload_remote_path + "/" + day;
 
-        //创建远程文件夹
-        System.out.println("/bin/mkdir " + remote_full_path );
         try {
-            CommandRunner.runSSH( "/bin/mkdir " + remote_full_path );
-        } catch (IOException e) {
+
+            ChannelSftp sftp = SftpUtil.getSftpConnect("162.105.16.229", 8022, "luyj", "pkulky201");
+            SftpUtil.mkdir(remote_full_path, sftp);
+
+            for(int i=0; i<list.size(); i++){
+
+                UploadItem item = list.get(i);
+                String remoteFileDir = remote_full_path + "/" + item.getTitle();
+                SftpUtil.mkdir(remoteFileDir, sftp);
+
+                uploadItems(item.getPath(), remoteFileDir, sftp, uploadLogRepository , upload_vendor_name,
+                        vendorPath, uploader_name,  trans_path, play_path, item);
+
+            }
+//            SftpUtil.exit(sftp);
+
+        }  catch (SftpException e) {
+            e.printStackTrace();
+        } catch (JSchException e) {
             e.printStackTrace();
         }
 
-        //上传文件夹列表
-        for(int i=0; i<list.size(); i++){
-
-            //创建远程文件夹
-//            String folderName = outs.get(i).substring(0, outs.get(i).length()-1);
-//            if(folderName.contains(" ")){
-//
-//                System.out.println("/bin/mv "+folderPath+"/"+folderName+" "+folderPath+"/"+removeBlank(folderName));
-//                String[] cmdsArray = new String [] {"/bin/mv", folderPath+"/"+folderName, folderPath+"/"+removeBlank(folderName)};
-//                Vector<String> vecstrs = CommandRunner.execCmdsArray(cmdsArray);
-//                System.out.println(vecstrs.toString());
-//                folderName = removeBlank(folderName);
-//            }
-//            System.out.println("/bin/mkdir " + remote_full_path + "/" + folderName );
-//
-//            try {
-//                CommandRunner.runSSH("/bin/mkdir " + remote_full_path + "/" + folderName);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//
-//            //上传和删除文件
-//            System.out.println("localPath="+folderPath+"/"+folderName);
-//            System.out.println("remotePath="+remote_full_path + "/" + folderName);
-//            uploadFile(folderPath+"/"+folderName, uploadLogRepository, remote_full_path + "/" + folderName,
-//                    upload_vendor_name, uploader_name,  vendor_path, trans_path, play_path);
-//
-//            //删除本地文件夹
-//            System.out.println("rm -rf " + folderPath + "/" + folderName);
-//            CommandRunner.execCmds("rm -rf " + folderPath + "/" + folderName);
-        }
         return true;
     }
 
+
+
 //    public static void main(String[] args) {
 ////        UploadTool tool = new UploadTool();
-////        List<UploadItem> list = tool.getUploadItems("E:\\program\\媒资\\data\\低码");
-//        String path = "E:\\program\\媒资\\data\\低码";
+////        List<UploadItem> list = tool.getUploadItems("E:\\program\\???\\data\\???");
+//        String path = "E:\\program\\???\\data\\???";
 //        File file = new File(path);
 //        File[] tempList = file.listFiles();
 //        for (int i = 0; i < tempList.length; i++) {
 //            if (tempList[i].isFile()) {
-//                System.out.println("文     件：" + tempList[i]);
+//                System.out.println("??     ???" + tempList[i]);
 //            }
 //            if (tempList[i].isDirectory()) {
-//                System.out.println("文件夹：" + tempList[i].getName());
-//                System.out.println("文件夹：" + tempList[i].getPath());
+//                System.out.println("??????" + tempList[i].getName());
+//                System.out.println("??????" + tempList[i].getPath());
 //            }
 //        }
 //    }

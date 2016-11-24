@@ -1,13 +1,19 @@
 package com.meiziaccess;
 
 import com.meiziaccess.model.UploadItem;
+import com.meiziaccess.model.UploadItemList;
+import com.meiziaccess.model.UploadObject;
+import com.meiziaccess.model.UploadRepository;
 import com.meiziaccess.upload.UploadTool;
+import com.meiziaccess.upload.UploadToolInterface;
+import com.meiziaccess.uploadModel.UploadLogRepository;
+import org.springframework.beans.factory.ObjectFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.core.env.SystemEnvironmentPropertySource;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.Null;
 import java.util.*;
@@ -44,13 +50,71 @@ public class MeiziaccessApplication  {
 	@Value("${configure.upload.local_path}")
 	private String upload_local_path;
 
+	@Autowired
+	UploadRepository uploadRepository;
+
 	@RequestMapping("/data-source")
 	@ResponseBody
 	public Map<String, Object> getItems() {
 		Map<String, Object> map = new HashMap<>();
 		List<UploadItem> list = UploadTool.getUploadItems(upload_local_path);
-//		List<UploadItem> list = UploadTool.getUploadItems("E:\\program\\媒资\\data\\低码");
+
+		List<UploadItem> uploadList = uploadRepository.findAll();
+		list.removeAll(uploadList);
 		map.put("data", list);
+		return map;
+	}
+
+	@Value("${configure.upload.remote_path}")
+	String upload_remote_path;
+
+	@Autowired
+	UploadLogRepository uploadLogRepository;
+
+	@Value("${configure.upload.vendor_name}")
+	String vendor_name;
+
+	@Value("${configure.local.vendor_path}")
+	String vendor_path;
+
+	@Value("${configure.upload.uploader_name}")
+	String uploader_name;
+
+	@Value("${configure.upload.trans_path}")
+	String trans_path;
+
+	@Value("${configure.upload.play_path}")
+	String play_path;
+
+	public boolean updateDatabase(List<UploadItem> list){
+		for(UploadItem item : list){
+			item.setUpload_time(new Date());
+			item.setUpload(true);
+			uploadRepository.save(item);
+		}
+		return true;
+	}
+
+	@RequestMapping(value = "/upload", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
+	@ResponseBody
+	public  Map<String, Object> uploadItems(@RequestBody UploadObject item) {
+		Map<String, Object> map = new HashMap<>();
+		if (item == null){
+			map.put("status", false);
+			return map;
+		}
+//		List<UploadItem> list = UploadTool.getUploadItems(upload_local_path);
+		System.out.println("upload");
+		System.out.println("title = " + item.getTitle() + '\t' + "path = " + item.getPath());
+		List<UploadItem> list = new ArrayList<>();
+		UploadItem it = new UploadItem(item.getTitle(), item.getMd5(), item.getPath());
+		list.add(it);
+
+		UploadToolInterface tool = new UploadTool();
+		tool.uploadItemDirs(upload_remote_path, list, uploadLogRepository, vendor_name, vendor_path, uploader_name, trans_path, play_path);
+		updateDatabase(list);
+
+		map.put("status", true);
 		return map;
 	}
 

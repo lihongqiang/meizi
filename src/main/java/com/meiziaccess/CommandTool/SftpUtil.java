@@ -202,8 +202,26 @@ public class SftpUtil {
      * @param sftp sftp连接
      * @throws Exception 异常
      */
-    private static void uploadFile(final String srcFile, final String dir, final String fileName, final ChannelSftp sftp)
+    public static void upload(final String srcFile, final String dir, final String fileName, final ChannelSftp sftp)
             throws SftpException {
+        sftp.cd(dir);
+        sftp.put(srcFile, fileName);
+    }
+
+    /**
+     * 上传文件-sftp协议.
+     * @param srcFile 源文件
+     * @param dir 保存路径
+     * @param fileName 保存文件名
+     * @param sftp sftp连接
+     * @throws Exception 异常
+     */
+    public static void uploadFile(final String srcFile, final String dir, final String fileName, final ChannelSftp sftp)
+            throws SftpException {
+        System.out.println("正在上传... " );
+        System.out.println("源文件:" + srcFile );
+        System.out.println("目标地址:" + dir );
+        System.out.println("目标名:" + fileName);
         mkdir(dir, sftp);
         sftp.cd(dir);
         sftp.put(srcFile, fileName);
@@ -226,6 +244,8 @@ public class SftpUtil {
         return false;
     }
 
+
+
     /**
      * 根据路径创建文件夹.
      * @param dir 路径 必须是 /xxx/xxx/ 不能就单独一个/
@@ -238,12 +258,15 @@ public class SftpUtil {
         String md = dir.replaceAll("\\\\", "/");
         if (md.indexOf("/") != 0 || md.length() == 1)
             return false;
+        if (!md.endsWith("/")){
+            md += "/";
+        }
         return mkdirs(md, sftp);
     }
 
     /**
      * 递归创建文件夹.
-     * @param dir 路径
+     * @param dir 路径含有最后一个/
      * @param sftp sftp连接
      * @return 是否创建成功
      * @throws SftpException 异常
@@ -303,32 +326,32 @@ public class SftpUtil {
      * 关闭协议-sftp协议.(关闭会导致连接池异常，因此不建议用户自定义关闭)
      * @param sftp sftp连接
      */
-    private static void exit(final ChannelSftp sftp) {
+    public static void exit(final ChannelSftp sftp) {
         sftp.exit();
     }
 
-    public static void main(String[] args) throws Exception {
-         ChannelSftp sftp = getSftpConnect("162.105.16.229", 8022, "luyj", "pkulky201");
-         String pathString = "G:\\test\\";
-         File file = new File(pathString);
-         System.out.println("上传文件开始...");
-         uploadFile(pathString, sftp);
-         System.out.println("上传成功，开始删除本地文件...");
-
-        // file.delete();
-        // System.out.println("删除完成，开始校验本地文件...");
-        // if (!file.exists()) {
-        // System.out.println("文件不存在，开始从远程服务器获取...");
-        // download(pathString, pathString, sftp);
-        // System.out.println("下载完成");
-        // } else {
-        // System.out.println("在本地找到文件");
-        // }
-        // rmDir("", sftp, true);
-//        String path = "E:\\aaa.zip";
-//        File file = SftpUtil.download(path, path, sftp);
-        // SftpUtil.exit(sftp);
-        exit(sftp);
-        System.exit(0);
-    }
+//    public static void main(String[] args) throws Exception {
+//         ChannelSftp sftp = getSftpConnect("162.105.16.229", 8022, "luyj", "pkulky201");
+//         String pathString = "E:\\program\\meiziprogram\\data\\dima\\北京您早2002-08-08（一）1f83b96a962040fc84c6683bd52a56ef\\北京您早2002-08-08（一）1417381000000.wmv";
+//         File file = new File(pathString);
+//         System.out.println("上传文件开始...");
+//         uploadFile(pathString, "/home/luyj/meizi/data/input", file.getName(), sftp);
+//         System.out.println("上传成功，开始删除本地文件...");
+//
+//        // file.delete();
+//        // System.out.println("删除完成，开始校验本地文件...");
+//        // if (!file.exists()) {
+//        // System.out.println("文件不存在，开始从远程服务器获取...");
+//        // download(pathString, pathString, sftp);
+//        // System.out.println("下载完成");
+//        // } else {
+//        // System.out.println("在本地找到文件");
+//        // }
+//        // rmDir("", sftp, true);
+////        String path = "E:\\aaa.zip";
+////        File file = SftpUtil.download(path, path, sftp);
+//        // SftpUtil.exit(sftp);
+//        exit(sftp);
+//        System.exit(0);
+//    }
 }

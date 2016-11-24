@@ -1,57 +1,37 @@
 package com.meiziaccess.model;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
 import javax.persistence.*;
-import java.util.Date;
 
 /**
- * Created by user-u1 on 2016/11/18.
+ * Created by user-u1 on 2016/11/23.
  */
 
-@Entity
-@Table(name = "upload_item")
-public class UploadItem {
+public class UploadObject {
 
-    @Id
-    @GeneratedValue
-    private Long id;
-
-    @Column(name = "upload")
-    boolean upload;
-
-    @Column(name = "title")
-    String title;
-
-    @Column(name = "upload_time")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date upload_time;
-
-    @Column(name = "duration")
-    int duration;
-
-    @Column(name = "price_type")
-    int price_type;     //0:单价  1:一口价
-
-    @Column(name = "price")
-    double price;
-
-    @Column(name = "copyright_type")
-    String copyright_type;     //RF  RM
-
-    @Column(name = "copyright_duration")
     int copyright_duration;   //0:6个月  1:一年  2:两年    3:三年   4::五年   5:长期
 
-    @Column(name = "md5")
+    String copyright_type;     //RF  RM
+
+    int duration;
+
     String md5;
 
-    @Column(name = "path")
     String path;
 
-    public UploadItem() {
+    double price;
+
+    int price_type;     //0:单价  1:一口价
+
+    String title;
+
+    boolean upload;
+
+    String upload_time;
+
+    public UploadObject() {
         this.upload = true;
         this.title = "";
-        this.upload_time = new Date();
+        this.upload_time = "";
         this.duration = 0;
         this.price = 0;
         this.price = 0;
@@ -61,13 +41,13 @@ public class UploadItem {
         this.path = "";
     }
 
-    public UploadItem(String title, String md5, String path) {
+    public UploadObject(String title, String md5, String path) {
         this.title = title;
         this.md5 = md5;
         this.path = path;
 
         this.upload = true;
-        this.upload_time = new Date();
+        this.upload_time = "";
         this.duration = 0;
         this.price = 0;
         this.price = 0;
@@ -77,7 +57,7 @@ public class UploadItem {
 
 
 
-    public UploadItem(boolean upload, String title, Date upload_time, int duration, int price_type, double price,
+    public UploadObject(boolean upload, String title, String upload_time, int duration, int price_type, double price,
                       String copyright_type, int copyright_duration, String md5, String path) {
         this.upload = upload;
         this.title = title;
@@ -107,11 +87,11 @@ public class UploadItem {
         this.title = title;
     }
 
-    public Date getUpload_time() {
+    public String getUpload_time() {
         return upload_time;
     }
 
-    public void setUpload_time(Date upload_time) {
+    public void setUpload_time(String upload_time) {
         this.upload_time = upload_time;
     }
 
@@ -169,17 +149,5 @@ public class UploadItem {
 
     public void setPath(String path) {
         this.path = path;
-    }
-
-    @Override
-    public boolean equals(Object anObject){
-        if(this==anObject)  // 引用相等
-            return true;
-        if(anObject==null)  // 对象为null
-            return false;
-        if(getClass() !=anObject.getClass()) //类是否相同
-            return false;
-        UploadItem another = (UploadItem)anObject;
-        return md5.equals(another.getMd5());  // 域属性相等
     }
 }

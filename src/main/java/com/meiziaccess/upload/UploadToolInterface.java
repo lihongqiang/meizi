@@ -1,7 +1,10 @@
 package com.meiziaccess.upload;
 
+import com.jcraft.jsch.ChannelSftp;
+import com.meiziaccess.model.UploadItem;
 import com.meiziaccess.uploadModel.UploadLogRepository;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
@@ -18,21 +21,38 @@ public interface UploadToolInterface  {
     public boolean checkFolder(String floderPath);
 
     //读取文件夹中的编目,素材文件列表和上架信息，修改数据库内容
-    public boolean updateDatabase(String folderPath, String xmlName, String videoName, UploadLogRepository uploadLogRepository,
+    public boolean updateDatabase_total(String folderPath, String xmlName, String videoName, UploadLogRepository uploadLogRepository,
                                   String upload_remote_path,String upload_vendor_name, String uploader_name, String vendor_path,
                                   String trans_path, String play_path);
-//    public boolean updateDatabase(String folderPath, String fileName, UploadLogRepository uploadLogRepository,
-//                                  String upload_remote_path,String upload_vendor_name, String uploader_name, String vendor_path);
-//    public boolean updateDatabase(String floderPath,  String fileName, UploadLogRepository uploadLogRepository);
 
-    //执行shell脚本，上传文件，删除文件
+
+//    //执行shell脚本，上传文件，删除文件
     public boolean uploadFile(String folderPath, UploadLogRepository uploadLogRepository, String upload_remote_path,
                               String upload_vendor_name, String uploader_name, String vendor_path, String trans_path, String play_path);
-
-    //执行shell脚本，上传文件夹，删除文件夹
+//
+//    //执行shell脚本，上传文件夹，删除文件夹
     public boolean uploadFiles(String folderPath, UploadLogRepository uploadLogRepository, String upload_remote_path,
                               String upload_vendor_name, String uploader_name, String vendor_path, String trans_path, String play_path);
 
     //读取上架文件
     public  Map<String, String> readFile(String fileName);
+
+    //上传所有视频文件夹列表
+    public boolean uploadItemDirs(String upload_remote_path, List<UploadItem> list,
+                                  UploadLogRepository uploadLogRepository ,String upload_vendor_name,
+                                  String vendorPath, String uploader_name,  String trans_path,
+                                  String play_path);
+
+    //更新远程数据库
+    public boolean updateDatabase(List<String> xmlName, String videoName, UploadLogRepository uploadLogRepository,
+                                  String upload_remote_path,String upload_vendor_name, String uploader_name, String vendor_path,
+                                  String trans_path, String play_path, UploadItem item);
+
+    //上传每一个视频文件夹
+    public  boolean uploadItems(final String fileDir, final String remotePath, final ChannelSftp sftp,
+                                UploadLogRepository uploadLogRepository ,String upload_vendor_name,
+                                String vendorPath, String uploader_name,  String trans_path,
+                                String play_path, UploadItem item);
+
+
 }
