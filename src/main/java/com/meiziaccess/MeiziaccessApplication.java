@@ -97,18 +97,23 @@ public class MeiziaccessApplication  {
 
 	@RequestMapping(value = "/upload", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
 	@ResponseBody
-	public  Map<String, Object> uploadItems(@RequestBody UploadObject item) {
+	public  Map<String, Object> uploadItems(@RequestBody UploadItem item) {
 		Map<String, Object> map = new HashMap<>();
 		if (item == null){
 			map.put("status", false);
 			return map;
 		}
+		//使用测试数据
 //		List<UploadItem> list = UploadTool.getUploadItems(upload_local_path);
-		System.out.println("upload");
-		System.out.println("title = " + item.getTitle() + '\t' + "path = " + item.getPath());
+
+		//测试获取数据
+//		System.out.println("upload");
+//		System.out.println("title = " + item.getTitle() + '\t' + "path = " + item.getPath());
+//		System.out.println("title = " + item.getPrice() + '\t' + "path = " + item.getDuration());
+
 		List<UploadItem> list = new ArrayList<>();
-		UploadItem it = new UploadItem(item.getTitle(), item.getMd5(), item.getPath());
-		list.add(it);
+//		UploadItem it = new UploadItem(item.getTitle(), item.getMd5(), item.getPath());
+		list.add(item);
 
 		UploadToolInterface tool = new UploadTool();
 		tool.uploadItemDirs(upload_remote_path, list, uploadLogRepository, vendor_name, vendor_path, uploader_name, trans_path, play_path);

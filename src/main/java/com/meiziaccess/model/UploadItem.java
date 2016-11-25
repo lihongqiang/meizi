@@ -25,7 +25,7 @@ public class UploadItem {
 
     @Column(name = "upload_time")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date upload_time;
+    Date upload_time;
 
     @Column(name = "duration")
     int duration;
@@ -54,8 +54,8 @@ public class UploadItem {
         this.upload_time = new Date();
         this.duration = 0;
         this.price = 0;
-        this.price = 0;
-        this.copyright_type = "RF";
+        this.price_type = 0;
+        this.copyright_type = "RM";
         this.copyright_duration = 0;
         this.md5 = "";
         this.path = "";
@@ -70,8 +70,8 @@ public class UploadItem {
         this.upload_time = new Date();
         this.duration = 0;
         this.price = 0;
-        this.price = 0;
-        this.copyright_type = "RF";
+        this.price_type = 0;
+        this.copyright_type = "RM";
         this.copyright_duration = 0;
     }
 
