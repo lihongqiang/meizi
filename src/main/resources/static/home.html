@@ -38,7 +38,7 @@
                     "orderable": false,
                     "data": "upload",
                     "render": function ( data, type, full, meta ) {
-                        return '<input type="checkbox" name="checkItem"  value=data>';
+                        return '<input id="checkItem" type="checkbox" name="checkItem"  value=data>';
                     }
                 },
                 {
@@ -148,7 +148,9 @@
             }
             var isOk = 0;
             alert("正在上传,请稍后");
+            $('#button').prop('disabled', true);
             rows.every( function ( rowIdx, tableLoop, rowLoop ) {
+
                 var d = this.data();
 //                console.log(d);
                 $.ajax({
@@ -162,9 +164,12 @@
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function(data) {
+//                        this.invalidate(); // invalidate the data DataTables has cached for this row
                         isOk += 1;
                         if(isOk == num){
                             alert("上传成功");
+                            rows.remove().draw(false);
+                            $('#button').prop('disabled', false);
                         }
 
 //                    $('#result').text(data.result);
@@ -172,7 +177,7 @@
                 });
                 this.invalidate(); // invalidate the data DataTables has cached for this row
             } );
-            rows.remove().draw(false);
+//            rows.remove().draw(false);
         });
 
         $('#upload_data tbody').on('change', 'tr select[name=copyright_type]', function(){
