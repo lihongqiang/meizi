@@ -23,7 +23,7 @@ public interface UploadToolInterface  {
     //读取文件夹中的编目,素材文件列表和上架信息，修改数据库内容
     public boolean updateDatabase_total(String folderPath, String xmlName, String videoName, UploadLogRepository uploadLogRepository,
                                   String upload_remote_path,String upload_vendor_name, String uploader_name, String vendor_path,
-                                  String trans_path, String play_path);
+                                  String trans_path, String play_path, List<String> frames);
 
 
 //    //执行shell脚本，上传文件，删除文件
@@ -46,7 +46,7 @@ public interface UploadToolInterface  {
     //更新远程数据库
     public boolean updateDatabase(List<String> xmlName, String videoName, UploadLogRepository uploadLogRepository,
                                   String upload_remote_path,String upload_vendor_name, String uploader_name, String vendor_path,
-                                  String trans_path, String play_path, UploadItem item);
+                                  String trans_path, String play_path, UploadItem item, List<String> frames);
 
     //上传每一个视频文件夹
     public  boolean uploadItems(final String fileDir, final String remotePath, final ChannelSftp sftp,

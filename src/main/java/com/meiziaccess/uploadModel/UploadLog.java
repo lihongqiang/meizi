@@ -16,7 +16,8 @@ public class UploadLog {
 
     public UploadLog(String vendor_name, Date upload_time, String uploader_name,
                      String xml_upload_path, String video_upload_path, String vendor_path,
-                     double video_price, String video_copyright, int video_price_type, int video_copyright_duration) {
+                     double video_price, String video_copyright, int video_price_type, int video_copyright_duration,
+                     String frame_extract_path) {
         this.vendor_name = vendor_name;
         this.upload_time = upload_time;
         this.uploader_name = uploader_name;
@@ -27,7 +28,7 @@ public class UploadLog {
         this.video_copyright = video_copyright;
         this.video_price_type = video_price_type;
         this.video_copyright_duration = video_copyright_duration;
-
+        this.frame_extract_path = frame_extract_path;
     }
 
     public String toString(){

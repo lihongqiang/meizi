@@ -108,7 +108,7 @@ public class UploadTool implements UploadToolInterface {
 
     public boolean updateDatabase_total(String folderPath, String xmlName, String videoName, UploadLogRepository uploadLogRepository,
                                   String upload_remote_path,String upload_vendor_name, String uploader_name, String vendor_path,
-                                  String trans_path, String play_path) {
+                                  String trans_path, String play_path, List<String> frames) {
 
         Map<String, String> map = new HashMap<String, String>();
         //?????????:price copyright
@@ -150,7 +150,8 @@ public class UploadTool implements UploadToolInterface {
                                     Double.parseDouble(map.get("price")),   //???
                                     "RF",
                                     1,
-                                    5);
+                                    5,
+                                    "");
         //xml??????
         log.setXml_trans_path(trans_path + "/" +"trans_"+new Date().getTime()+"_"+xmlName);
 
@@ -289,9 +290,12 @@ public class UploadTool implements UploadToolInterface {
                 System.out.println("rm " + folderPath + "/" + outs.get(i));
 //                CommandRunner.execCmds("rm " + folderPath + "/" + outs.get(i));
             }
+
+            List<String> keyFrames = new ArrayList<>();
+
             //????????
             updateDatabase_total(folderPath, xmlName , videoName, uploadLogRepository,  upload_remote_path,
-                    upload_vendor_name,  uploader_name,  vendor_path, trans_path, play_path );
+                    upload_vendor_name,  uploader_name,  vendor_path, trans_path, play_path,  keyFrames);
             //???upload.txt???
 //            CommandRunner.execCmds("rm " + folderPath + "/" + "upload.txt");
         }
@@ -456,12 +460,12 @@ public class UploadTool implements UploadToolInterface {
         }
         //????????
         updateDatabase( xmlName, videoName, uploadLogRepository,  remotePath,
-                upload_vendor_name,  uploader_name,  vendorPath, trans_path, play_path, item );
+                upload_vendor_name,  uploader_name,  vendorPath, trans_path, play_path, item,  keyFrames);
         return true;
     }
     public boolean updateDatabase(List<String> xmlName, String videoName, UploadLogRepository uploadLogRepository,
                                   String upload_remote_path,String upload_vendor_name, String uploader_name, String vendor_path,
-                                  String trans_path, String play_path, UploadItem item) {
+                                  String trans_path, String play_path, UploadItem item, List<String> frames) {
 
         //????????????
 //        String higeCodeVideoName = "";
@@ -480,11 +484,17 @@ public class UploadTool implements UploadToolInterface {
 //            }
 //        }
 
-        //xml??????,???
+        //xml
         for(int i=0; i<xmlName.size(); i++){
             xmlName.set(i, upload_remote_path + "/" + xmlName.get(i));
         }
         String xmlPath = StringUtils.join(xmlName, ',');
+
+        //frames
+        for(int i=0; i<frames.size(); i++){
+            frames.set(i, upload_remote_path + "/" + frames.get(i));
+        }
+        String framesPath = StringUtils.join(frames, ',');
 
         //???????????
         UploadLog log = new UploadLog(
@@ -497,7 +507,8 @@ public class UploadTool implements UploadToolInterface {
                 item.getPrice(),   //???
                 item.getCopyright_type(),   //??????
                 item.getPrice_type(),   //??????
-                item.getCopyright_duration()    //?????
+                item.getCopyright_duration(),    //?????
+                framesPath
         );
         log.setXml_trans_path(trans_path + "/" +"trans_"+new Date().getTime()+"_"+xmlName);
 
