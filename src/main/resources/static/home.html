@@ -123,8 +123,12 @@
 
         $('#button').click(function () {
             var rows = table.rows('.selected');
-            var flag = 0;
-            var num = 0;
+            if(rows.data().length == 0){
+                alert("请选择上传的视频");
+                return false;
+            }
+            var flag = 0;           //标记是否有price为填写
+            var num = 0;            //标记第几行
             rows.every(function( rowIdx, tableLoop, rowLoop ){
                 num += 1;
                 var d = this.data();
@@ -140,11 +144,11 @@
                         }
                         cnt += 1;
                     });
-                    return 1;
+                    return false;
                 }
             });
             if(flag == 1){
-                return 1;
+                return false;
             }
             var isOk = 0;
             alert("正在上传,请稍后");
