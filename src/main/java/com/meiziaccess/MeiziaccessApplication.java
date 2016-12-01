@@ -53,12 +53,26 @@ public class MeiziaccessApplication  {
 	@Autowired
 	UploadRepository uploadRepository;
 
+	//一个视频的所有数据在同一个文件夹
 	@RequestMapping("/data-source")
 	@ResponseBody
 	public Map<String, Object> getItems() {
+
 		Map<String, Object> map = new HashMap<>();
 		List<UploadItem> list = UploadTool.getUploadItems(upload_local_path);
 
+		List<UploadItem> uploadList = uploadRepository.findAll();
+		list.removeAll(uploadList);
+		map.put("data", list);
+		return map;
+	}
+
+	//xml，视频，关键帧在不同文件夹
+	@RequestMapping("/data-source-association")
+	@ResponseBody
+	public Map<String, Object> getItemsAssociation() {
+		Map<String, Object> map = new HashMap<>();
+		List<UploadItem> list = UploadTool.getUploadItemsAssociation(upload_local_path);
 		List<UploadItem> uploadList = uploadRepository.findAll();
 		list.removeAll(uploadList);
 		map.put("data", list);
@@ -103,20 +117,35 @@ public class MeiziaccessApplication  {
 			map.put("status", false);
 			return map;
 		}
-		//使用测试数据
-//		List<UploadItem> list = UploadTool.getUploadItems(upload_local_path);
-
-		//测试获取数据
-//		System.out.println("upload");
-//		System.out.println("title = " + item.getTitle() + '\t' + "path = " + item.getPath());
-//		System.out.println("title = " + item.getPrice() + '\t' + "path = " + item.getDuration());
 
 		List<UploadItem> list = new ArrayList<>();
-//		UploadItem it = new UploadItem(item.getTitle(), item.getMd5(), item.getPath());
 		list.add(item);
 
 		UploadToolInterface tool = new UploadTool();
 		tool.uploadItemDirs(upload_remote_path, list, uploadLogRepository, vendor_name, vendor_path, uploader_name, trans_path, play_path);
+		updateDatabase(list);
+
+		map.put("status", true);
+		return map;
+	}
+
+	@RequestMapping(value = "/upload-association", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
+	@ResponseBody
+	public  Map<String, Object> uploadItemsAssociation(@RequestBody UploadItem item) {
+
+		Map<String, Object> map = new HashMap<>();
+
+		if (item == null){
+			map.put("status", false);
+			return map;
+		}
+
+		List<UploadItem> list = new ArrayList<>();
+		list.add(item);
+
+		UploadToolInterface tool = new UploadTool();
+
+		tool.uploadItemDirsAssociation(upload_remote_path, list, uploadLogRepository, vendor_name, vendor_path, uploader_name, trans_path, play_path);
 		updateDatabase(list);
 
 		map.put("status", true);

@@ -3,6 +3,8 @@ package com.meiziaccess.upload;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.SftpException;
+import com.meiziaccess.AssociationTool.Addresses;
+import com.meiziaccess.AssociationTool.Associator;
 import com.meiziaccess.CommandTool.CommandRunner;
 import com.meiziaccess.CommandTool.SftpUtil;
 import com.meiziaccess.model.UploadItem;
@@ -392,9 +394,55 @@ public class UploadTool implements UploadToolInterface {
         return list;
     }
 
+    public static boolean isNullOrBlank(String s){
+        if (s == null || s.equals("")){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public  static List<UploadItem> getUploadItemsAssociation(String path){
+        List<UploadItem> list = new ArrayList<>();
+        Associator associator=new Associator();
+        System.out.println(path);
+        List<Addresses> rs=associator.getAddresses(path + "\\xml",path+"\\视频",path+"\\视频",
+                path+"\\视频截图",path+"\\xml");
+        for(Addresses addresses:rs){
+            String xmlPath = addresses.getUnCatalgedXmlPath();
+            String highCodeVideoPath = addresses.getHighCodeVideoPath();
+            String lowCdeVideoPath = addresses.getLowCodeVideoPath();
+            String keyFramePath = addresses.getKeyFramePath();
+            String name = addresses.getName();
+
+            List<String> pathList = new ArrayList<>();
+            pathList.add(xmlPath);
+            pathList.add(lowCdeVideoPath);
+            pathList.add(highCodeVideoPath);
+            pathList.add(keyFramePath);
+            String pathCombination = StringUtils.join(pathList, ',');
+
+            System.out.println(pathCombination);
+            boolean flag = false;
+            for(String s: pathList){
+                if(isNullOrBlank(s)){
+                    flag = true;
+                    System.out.println(name);
+                    break;
+                }
+            }
+            if(flag){
+                continue;
+            }
+
+
+            list.add(new UploadItem(name, getMD5(name), pathCombination));
+        }
+        return list;
+    }
+
     public static String getMD5(String str) {
         try {
-            // ???????D5?????????
             MessageDigest md = MessageDigest.getInstance("MD5");
             md.update(str.getBytes());
 
@@ -463,26 +511,103 @@ public class UploadTool implements UploadToolInterface {
                 upload_vendor_name,  uploader_name,  vendorPath, trans_path, play_path, item,  keyFrames);
         return true;
     }
+
+    /**
+     * 将以分号隔开的字符串拆成列表
+     * @param names
+     * @return
+     */
+    private List<String> getNameList(String names){
+        List<String> nameList = new ArrayList<>();
+        String[] paths = names.split(";");
+        for(int i=0; i<paths.length; i++){
+            nameList.add(paths[i]);
+        }
+        return nameList;
+    }
+
+    String getExtension(String name){
+        String[] names = name.split(".");
+        return names[names.length-1];
+    }
+
+    public  boolean uploadItemsAssociation( String fileDir,  String remotePath,  ChannelSftp sftp,
+                                 UploadLogRepository uploadLogRepository ,String upload_vendor_name,
+                                 String vendorPath, String uploader_name,  String trans_path,
+                                 String play_path, UploadItem item){
+
+        String[] paths = item.getPath().split(",");
+        String xmlPath = paths[0];
+        String lowCodeVideoPath = paths[1];
+        String highCodeVideoPath = paths[2];
+        String keyFramePath = paths[3];
+
+        //xml
+        List<String> xmlName = getNameList(xmlPath);
+        for(int i=0; i<xmlName.size(); i++){
+            try {
+                File xmlFile = new File(xmlName.get(i));
+                String xml =  removeBlank(xmlFile.getName());
+                SftpUtil.uploadFile(xmlName.get(i), remotePath, xml, sftp);
+                xmlName.set(i, xml);
+                System.out.println("上传 " + xmlName.get(i));
+            } catch (SftpException e) {
+                e.printStackTrace();
+            }
+        }
+
+        //lowCodeVideo
+        File videoFile = new File(lowCodeVideoPath);
+        String videoName = removeBlank(videoFile.getName());
+        try {
+
+            SftpUtil.uploadFile(lowCodeVideoPath, remotePath, videoName, sftp);
+            System.out.println("上传 "+videoName);
+        } catch (SftpException e) {
+            e.printStackTrace();
+        }
+
+        //highCodeVideo =
+
+        //keyFrames
+        List<String> keyFrames = getNameList(keyFramePath);
+        for(int i=0; i<keyFrames.size(); i++){
+            try {
+                File frameFile = new File(keyFrames.get(i));
+                String frame = removeBlank(frameFile.getName());
+                SftpUtil.uploadFile(keyFrames.get(i), remotePath, frame, sftp);
+                keyFrames.set(i, frame);
+                System.out.println("上传 "+keyFrames.get(i));
+            } catch (SftpException e) {
+                e.printStackTrace();
+            }
+        }
+
+        //只支持单个xml，关键帧，低码文件对应
+        updateDatabase( xmlName, videoName, uploadLogRepository,  remotePath,
+                upload_vendor_name,  uploader_name,  highCodeVideoPath, trans_path, play_path, item,  keyFrames);
+        return true;
+    }
+
+    /**
+     *
+     * @param xmlName               xml名字列表
+     * @param videoName             低码video名字
+     * @param uploadLogRepository   写媒资数据库的类
+     * @param upload_remote_path    远程上传的文件夹路径
+     * @param upload_vendor_name    上传电视台名
+     * @param uploader_name         上传人名
+     * @param vendor_path           高码video路径
+     * @param trans_path            媒资平台转码路径
+     * @param play_path             媒资平台播放路径
+     * @param item                  视频类
+     * @param frames                关键帧名字列表
+     * @return
+     */
     public boolean updateDatabase(List<String> xmlName, String videoName, UploadLogRepository uploadLogRepository,
                                   String upload_remote_path,String upload_vendor_name, String uploader_name, String vendor_path,
                                   String trans_path, String play_path, UploadItem item, List<String> frames) {
 
-        //????????????
-//        String higeCodeVideoName = "";
-//        String[] cmdsArray = new String[]{"/bin/ls", vendor_path};
-//        System.out.println("/bin/ls "+vendor_path);
-//        Vector<String> lists = CommandRunner.execCmdsArray(cmdsArray);
-//        System.out.println(lists.toString());
-//        String videoNameWithFormat = videoName.substring(0, videoName.lastIndexOf("."));
-//        for(String s : lists){
-//            String fileName = s.substring(0, s.lastIndexOf("."));
-//            System.out.println(fileName + "   " + videoNameWithFormat);
-//            if(fileName.equals(videoNameWithFormat)){
-//                System.out.println(s);
-//                higeCodeVideoName = s;
-//                break;
-//            }
-//        }
 
         //xml
         for(int i=0; i<xmlName.size(); i++){
@@ -520,9 +645,9 @@ public class UploadTool implements UploadToolInterface {
     }
 
     public boolean uploadItemDirs(String upload_remote_path, List<UploadItem> list,
-                                  UploadLogRepository uploadLogRepository ,String upload_vendor_name,
-                                  String vendorPath, String uploader_name,  String trans_path,
-                                  String play_path){
+                                   UploadLogRepository uploadLogRepository ,String upload_vendor_name,
+                                   String vendorPath, String uploader_name,  String trans_path,
+                                   String play_path){
 
         Date date = new Date();
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -545,6 +670,41 @@ public class UploadTool implements UploadToolInterface {
 
             }
 //            SftpUtil.exit(sftp);
+
+        }  catch (SftpException e) {
+            e.printStackTrace();
+        } catch (JSchException e) {
+            e.printStackTrace();
+        }
+
+        return true;
+    }
+
+    public boolean uploadItemDirsAssociation(String upload_remote_path, List<UploadItem> list,
+                                  UploadLogRepository uploadLogRepository ,String upload_vendor_name,
+                                  String vendorPath, String uploader_name,  String trans_path,
+                                  String play_path){
+
+        Date date = new Date();
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String day = dateFormat.format(date);
+        String remote_full_path = upload_remote_path + "/" + day;
+
+        try {
+
+            ChannelSftp sftp = SftpUtil.getSftpConnect("162.105.16.229", 8022, "luyj", "pkulky201");
+            SftpUtil.mkdir(remote_full_path, sftp);
+
+            for(int i=0; i<list.size(); i++){
+
+                UploadItem item = list.get(i);
+                String remoteFileDir = remote_full_path + "/" + item.getTitle();
+                SftpUtil.mkdir(remoteFileDir, sftp);
+
+                uploadItemsAssociation(item.getPath(), remoteFileDir, sftp, uploadLogRepository , upload_vendor_name,
+                        vendorPath, uploader_name,  trans_path, play_path, item);
+
+            }
 
         }  catch (SftpException e) {
             e.printStackTrace();

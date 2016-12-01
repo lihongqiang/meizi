@@ -54,5 +54,10 @@ public interface UploadToolInterface  {
                                 String vendorPath, String uploader_name,  String trans_path,
                                 String play_path, UploadItem item);
 
+    //针对xml，低码视频，关键帧在不同文件的情况
+    public boolean uploadItemDirsAssociation(String upload_remote_path, List<UploadItem> list,
+                                             UploadLogRepository uploadLogRepository ,String upload_vendor_name,
+                                             String vendorPath, String uploader_name,  String trans_path,
+                                             String play_path);
 
 }
