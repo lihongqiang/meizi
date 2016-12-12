@@ -77,7 +77,7 @@ public class UploadLog {
     @Column(name = "video_copyright")
     private String video_copyright;
 
-    @Column(name = "video_price_tpye")
+    @Column(name = "video_price_type")
     private int video_price_type;
 
     @Column(name = "video_copyright_duration")
@@ -179,7 +179,7 @@ public class UploadLog {
         this.video_play_path = video_play_path;
     }
 
-    public int getVideo_price_type() {
+    public int getvideo_price_type() {
         return video_price_type;
     }
 

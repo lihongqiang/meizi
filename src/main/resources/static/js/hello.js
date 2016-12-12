@@ -12,6 +12,10 @@ angular.module('hello', [ 'ngRoute' ]).config(function($routeProvider, $httpProv
 
 	$httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
+	//$httpProvider.default.headers.post = {
+	//	'Content-Type': 'application/json'
+	//}
+
 }).controller('navigation',
 
 		function($rootScope, $http, $location, $route) {
@@ -31,6 +35,29 @@ angular.module('hello', [ 'ngRoute' ]).config(function($routeProvider, $httpProv
 					"username": "",
 					"password": ""
 				};
+
+				//$http.post("http://162.105.16.229/vendor_login", data).success(function(response) {
+				//	if (response.data.status == true) {
+				//		if(response.data[code] == 200){
+				//			$rootScope.authenticated = true;
+				//		}else{
+				//			$rootScope.authenticated = false;
+				//		}
+                //
+				//	} else {
+				//		$rootScope.authenticated = false;
+				//	}
+				//	callback && callback($rootScope.authenticated);
+				//}, function() {
+				//	$rootScope.authenticated = false;
+				//	callback && callback(false);
+				//});
+
+				//$.post("http://162.105.16.229/vendor_login", data,
+				//	function(data){
+				//		alert(data.code); // John
+				//		console.log(data.code); //  2pm
+				//	}, "json");
 
 				$http.get('authenticate', {
 					params : data

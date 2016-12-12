@@ -1,5 +1,6 @@
 package com.meiziaccess;
 
+import com.meiziaccess.CommandTool.MyHttpUtil;
 import com.meiziaccess.model.UploadItem;
 import com.meiziaccess.model.UploadItemList;
 import com.meiziaccess.model.UploadObject;
@@ -7,6 +8,7 @@ import com.meiziaccess.model.UploadRepository;
 import com.meiziaccess.upload.UploadTool;
 import com.meiziaccess.upload.UploadToolInterface;
 import com.meiziaccess.uploadModel.UploadLogRepository;
+import net.sf.json.JSONObject;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,10 +29,11 @@ public class MeiziaccessApplication  {
 	@RequestMapping("/authenticate")
 	public Map<String, Object> authenticate(String username, String password){
 		Map<String, Object> model = new HashMap<String, Object>();
-		if(username == null || password == null){
+		JSONObject objData = MyHttpUtil.post(username, password);
+		if(objData == null){
 			model.put("status", false);
 		}else{
-			if(username.equals("lhq") && password.equals("lhq")){
+			if(objData.getInt("code") ==  200){
 				model.put("status", true);
 			}else{
 				model.put("status", false);

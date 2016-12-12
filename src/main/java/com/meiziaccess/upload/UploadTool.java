@@ -406,8 +406,10 @@ public class UploadTool implements UploadToolInterface {
         List<UploadItem> list = new ArrayList<>();
         Associator associator=new Associator();
         System.out.println(path);
-        List<Addresses> rs=associator.getAddresses(path + "\\xml",path+"\\视频",path+"\\视频",
-                path+"\\视频截图",path+"\\xml");
+        List<Addresses> rs=associator.getAddresses(path + "/xml",path+"/video",path+"/video",
+                path+"/keyFrame",path+"/xml");
+//        List<Addresses> rs=associator.getAddresses(path + "\\xml",path+"\\视频",path+"\\视频",
+//                path+"\\视频截图",path+"\\xml");
         for(Addresses addresses:rs){
             String xmlPath = addresses.getUnCatalgedXmlPath();
             String highCodeVideoPath = addresses.getHighCodeVideoPath();
