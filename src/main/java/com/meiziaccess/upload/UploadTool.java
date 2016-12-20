@@ -402,12 +402,12 @@ public class UploadTool implements UploadToolInterface {
         }
     }
 
-    public  static List<UploadItem> getUploadItemsAssociation(String path){
+    public  static List<UploadItem> getUploadItemsAssociation(String path, int type){
         List<UploadItem> list = new ArrayList<>();
         Associator associator=new Associator();
         System.out.println(path);
         List<Addresses> rs=associator.getAddresses(path + "/xml",path+"/video",path+"/video",
-                path+"/keyFrame",path+"/xml");
+                path+"/keyFrame",path+"/xml", type);
 //        List<Addresses> rs=associator.getAddresses(path + "\\xml",path+"\\视频",path+"\\视频",
 //                path+"\\视频截图",path+"\\xml");
         for(Addresses addresses:rs){
@@ -454,6 +454,7 @@ public class UploadTool implements UploadToolInterface {
         }
         return "";
     }
+
 
     public static List<UploadItem> getTestData(){
         List<UploadItem> list = new ArrayList<>();

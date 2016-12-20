@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.Null;
 import java.util.*;
+import com.meiziaccess.secure.*;
 
 
 @SpringBootApplication
@@ -26,15 +27,19 @@ import java.util.*;
 //@EnableScheduling
 public class MeiziaccessApplication  {
 
+	private int vendor_type = 2;
+
 	@RequestMapping("/authenticate")
 	public Map<String, Object> authenticate(String username, String password){
 		Map<String, Object> model = new HashMap<String, Object>();
+
 		JSONObject objData = MyHttpUtil.post(username, password);
 		if(objData == null){
 			model.put("status", false);
 		}else{
 			if(objData.getInt("code") ==  200){
 				model.put("status", true);
+				System.out.println(objData.toString());
 			}else{
 				model.put("status", false);
 			}
@@ -70,12 +75,20 @@ public class MeiziaccessApplication  {
 		return map;
 	}
 
+	/**
+	 *
+	 * 1 网络台
+	 * 2 BTV
+	 * 3 南方素材
+	 * 4 海外素材
+	 * 5 电视剧
+     */
 	//xml，视频，关键帧在不同文件夹
 	@RequestMapping("/data-source-association")
 	@ResponseBody
 	public Map<String, Object> getItemsAssociation() {
 		Map<String, Object> map = new HashMap<>();
-		List<UploadItem> list = UploadTool.getUploadItemsAssociation(upload_local_path);
+		List<UploadItem> list = UploadTool.getUploadItemsAssociation(upload_local_path, vendor_type);
 		List<UploadItem> uploadList = uploadRepository.findAll();
 		list.removeAll(uploadList);
 		map.put("data", list);
