@@ -27,7 +27,7 @@ import com.meiziaccess.secure.*;
 //@EnableScheduling
 public class MeiziaccessApplication  {
 
-	private int vendor_type = 2;
+	private int vendor_type = 1;
 
 	@RequestMapping("/authenticate")
 	public Map<String, Object> authenticate(String username, String password){
@@ -39,6 +39,7 @@ public class MeiziaccessApplication  {
 		}else{
 			if(objData.getInt("code") ==  200){
 				model.put("status", true);
+				vendor_type = objData.getInt("data");
 				System.out.println(objData.toString());
 			}else{
 				model.put("status", false);

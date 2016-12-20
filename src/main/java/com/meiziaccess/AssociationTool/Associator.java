@@ -59,7 +59,7 @@ public class Associator {
                             break;
                         default:
                     }
-                }catch (NullPointerException e){
+                }catch (Exception e){
                     continue;
                 }
 
