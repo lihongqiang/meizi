@@ -32,31 +32,35 @@ public class Associator {
                 String name="";
                 String keyFramePath="";
                 //解析xml, 获取名字
-                switch (type){
-                    case 1:
-                        name = getName(file);       //网络台
-                        StringBuilder sb=new StringBuilder();
-                        associatetKeyFrames(name,frameDir,sb);
-                        keyFramePath=sb.toString();
-                        break;
-                    case 2:
-                        name = getName2(file);      //BTV
-                        keyFramePath=getKeyFrameBTVorNanfang(file,frameDir);
-                       // System.out.println(keyFramePath+"-----------------------------------------------------------------------------------------");
-                        break;
-                    case 3:
-                        name = getName2(file);      //南方素材
-                        keyFramePath=getKeyFrameBTVorNanfang(file,frameDir);
-                        break;
-                    case 4:
-                        name = getName3(file);      //海外素材
-                        keyFramePath=getKeyFrameHaiWai(file,frameDir);
-                        break;
-                    case 5:
-                        name = getName4(file);      //电视剧
-                        keyFramePath=getKeyFrameDianshiju(file,frameDir);
-                        break;
-                    default:
+                try {
+                    switch (type) {
+                        case 1:
+                            name = getName(file);       //网络台
+                            StringBuilder sb = new StringBuilder();
+                            associatetKeyFrames(name, frameDir, sb);
+                            keyFramePath = sb.toString();
+                            break;
+                        case 2:
+                            name = getName2(file);      //BTV
+                            keyFramePath = getKeyFrameBTVorNanfang(file, frameDir);
+                            // System.out.println(keyFramePath+"-----------------------------------------------------------------------------------------");
+                            break;
+                        case 3:
+                            name = getName2(file);      //南方素材
+                            keyFramePath = getKeyFrameBTVorNanfang(file, frameDir);
+                            break;
+                        case 4:
+                            name = getName3(file);      //海外素材
+                            keyFramePath = getKeyFrameHaiWai(file, frameDir);
+                            break;
+                        case 5:
+                            name = getName4(file);      //电视剧
+                            keyFramePath = getKeyFrameDianshiju(file, frameDir);
+                            break;
+                        default:
+                    }
+                }catch (NullPointerException e){
+                    continue;
                 }
 
                 curAddress.setLowCodeVideoPath(associateVideo(name,lowVideoDir));
