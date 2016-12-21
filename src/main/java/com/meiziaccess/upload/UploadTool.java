@@ -426,13 +426,16 @@ public class UploadTool implements UploadToolInterface {
 
             System.out.println(pathCombination);
             boolean flag = false;
-            for(String s: pathList){
-                if(isNullOrBlank(s)){
-                    flag = true;
-                    System.out.println(name);
-                    break;
-                }
+            if(isNullOrBlank(lowCdeVideoPath) || isNullOrBlank(highCodeVideoPath)){
+                flag = true;
             }
+//            for(String s: pathList){
+//                if(isNullOrBlank(s)){
+//                    flag = true;
+//                    System.out.println(name);
+//                    break;
+//                }
+//            }
             if(flag){
                 continue;
             }
@@ -485,6 +488,7 @@ public class UploadTool implements UploadToolInterface {
         String videoName = "";          //???
         List<String> keyFrames = new ArrayList<>();          //?????,???,??????
 
+        String remoteKeyFramesPath = remotePath + "/keyFrames";
 
         for (int i = 0; i < tempList.length; i++) {
             if (tempList[i].isFile()) {
@@ -502,16 +506,17 @@ public class UploadTool implements UploadToolInterface {
                     }
 
                     //?????
-                    SftpUtil.uploadFile(tempList[i].getPath(), remotePath, tempList[i].getName(), sftp);
+                    SftpUtil.uploadFile(tempList[i].getPath(), remoteKeyFramesPath, tempList[i].getName(), sftp);
 
                 } catch (SftpException e) {
                     e.printStackTrace();
                 }
             }
         }
+
         //????????
         updateDatabase( xmlName, videoName, uploadLogRepository,  remotePath,
-                upload_vendor_name,  uploader_name,  vendorPath, trans_path, play_path, item,  keyFrames);
+                upload_vendor_name,  uploader_name,  vendorPath, trans_path, play_path, item,  remoteKeyFramesPath);
         return true;
     }
 
@@ -545,12 +550,12 @@ public class UploadTool implements UploadToolInterface {
         String highCodeVideoPath = paths[2];
         String keyFramePath = paths[3];
 
-        //xml
+        //xml   替换xml文件名中的空格
         List<String> xmlName = getNameList(xmlPath);
         for(int i=0; i<xmlName.size(); i++){
             try {
                 File xmlFile = new File(xmlName.get(i));
-                String xml =  removeBlank(xmlFile.getName());
+                String xml =  replaceBlankToLine(xmlFile.getName());
                 SftpUtil.uploadFile(xmlName.get(i), remotePath, xml, sftp);
                 xmlName.set(i, xml);
                 System.out.println("上传 " + xmlName.get(i));
@@ -561,7 +566,7 @@ public class UploadTool implements UploadToolInterface {
 
         //lowCodeVideo
         File videoFile = new File(lowCodeVideoPath);
-        String videoName = removeBlank(videoFile.getName());
+        String videoName = replaceBlankToLine(videoFile.getName());
         try {
 
             SftpUtil.uploadFile(lowCodeVideoPath, remotePath, videoName, sftp);
@@ -574,11 +579,12 @@ public class UploadTool implements UploadToolInterface {
 
         //keyFrames
         List<String> keyFrames = getNameList(keyFramePath);
+        String remoteKeyFramesPath = remotePath+"/keyFrames";
         for(int i=0; i<keyFrames.size(); i++){
             try {
                 File frameFile = new File(keyFrames.get(i));
-                String frame = removeBlank(frameFile.getName());
-                SftpUtil.uploadFile(keyFrames.get(i), remotePath, frame, sftp);
+                String frame = replaceBlankToLine(frameFile.getName());
+                SftpUtil.uploadFile(keyFrames.get(i), remoteKeyFramesPath, frame, sftp);
                 keyFrames.set(i, frame);
                 System.out.println("上传 "+keyFrames.get(i));
             } catch (SftpException e) {
@@ -588,7 +594,7 @@ public class UploadTool implements UploadToolInterface {
 
         //只支持单个xml，关键帧，低码文件对应
         updateDatabase( xmlName, videoName, uploadLogRepository,  remotePath,
-                upload_vendor_name,  uploader_name,  highCodeVideoPath, trans_path, play_path, item,  keyFrames);
+                upload_vendor_name,  uploader_name,  highCodeVideoPath, trans_path, play_path, item,  remoteKeyFramesPath);
         return true;
     }
 
@@ -604,25 +610,26 @@ public class UploadTool implements UploadToolInterface {
      * @param trans_path            媒资平台转码路径
      * @param play_path             媒资平台播放路径
      * @param item                  视频类
-     * @param frames                关键帧名字列表
+     * @param remoteKeyFramesPath                关键帧文件夹路径
      * @return
      */
     public boolean updateDatabase(List<String> xmlName, String videoName, UploadLogRepository uploadLogRepository,
                                   String upload_remote_path,String upload_vendor_name, String uploader_name, String vendor_path,
-                                  String trans_path, String play_path, UploadItem item, List<String> frames) {
+                                  String trans_path, String play_path, UploadItem item, String remoteKeyFramesPath) {
 
-
+        String xmlOriginName = xmlName.get(0);
         //xml
         for(int i=0; i<xmlName.size(); i++){
             xmlName.set(i, upload_remote_path + "/" + xmlName.get(i));
         }
         String xmlPath = StringUtils.join(xmlName, ',');
 
-        //frames
-        for(int i=0; i<frames.size(); i++){
-            frames.set(i, upload_remote_path + "/" + frames.get(i));
-        }
-        String framesPath = StringUtils.join(frames, ',');
+        //frames 关键帧文件夹路径
+//        for(int i=0; i<frames.size(); i++){
+//            frames.set(i, upload_remote_path + "/" + frames.get(i));
+//        }
+//        String framesPath = StringUtils.join(frames, ',');
+        String framesPath = remoteKeyFramesPath;
 
         //???????????
         UploadLog log = new UploadLog(
@@ -638,7 +645,7 @@ public class UploadTool implements UploadToolInterface {
                 item.getCopyright_duration(),    //?????
                 framesPath
         );
-        log.setXml_trans_path(trans_path + "/" +"trans_"+new Date().getTime()+"_"+xmlName);
+        log.setXml_trans_path(trans_path + "/" +"trans_"+new Date().getTime()+"_"+xmlOriginName);
 
         String videoTransName = videoName.split("\\.")[0] + ".mp4";
         log.setVideo_play_path(play_path+"/"+videoTransName);
@@ -683,6 +690,15 @@ public class UploadTool implements UploadToolInterface {
         return true;
     }
 
+    /**
+     * 将名字中的空格替换成下划线
+     * @param name
+     * @return
+     */
+    public String replaceBlankToLine(String name){
+        return name.replace(" ", "_");
+    }
+
     public boolean uploadItemDirsAssociation(String upload_remote_path, List<UploadItem> list,
                                   UploadLogRepository uploadLogRepository ,String upload_vendor_name,
                                   String vendorPath, String uploader_name,  String trans_path,
@@ -701,7 +717,7 @@ public class UploadTool implements UploadToolInterface {
             for(int i=0; i<list.size(); i++){
 
                 UploadItem item = list.get(i);
-                String remoteFileDir = remote_full_path + "/" + item.getTitle();
+                String remoteFileDir = remote_full_path + "/" + replaceBlankToLine(item.getTitle());
                 SftpUtil.mkdir(remoteFileDir, sftp);
 
                 uploadItemsAssociation(item.getPath(), remoteFileDir, sftp, uploadLogRepository , upload_vendor_name,

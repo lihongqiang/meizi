@@ -162,7 +162,7 @@ public class MeiziaccessApplication  {
 
 		UploadToolInterface tool = new UploadTool();
 
-		tool.uploadItemDirsAssociation(upload_remote_path, list, uploadLogRepository, vendor_name, vendor_path, uploader_name, trans_path, play_path);
+		tool.uploadItemDirsAssociation(upload_remote_path, list, uploadLogRepository, ""+vendor_type, vendor_path, uploader_name, trans_path, play_path);
 		updateDatabase(list);
 
 		map.put("status", true);
