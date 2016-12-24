@@ -638,11 +638,11 @@ public class UploadTool implements UploadToolInterface {
                 uploader_name,
                 xmlPath ,          //xml
                 upload_remote_path +"/"+ videoName,         //video
-                vendor_path,        //?????????
-                item.getPrice(),   //???
-                item.getCopyright_type(),   //??????
-                item.getPrice_type(),   //??????
-                item.getCopyright_duration(),    //?????
+                vendor_path,        //电视台路径
+                item.getPrice(),   //价格
+                item.getCopyright_type(),   //版权类型
+                item.getPrice_type(),   //价格类型
+                item.getCopyright_duration(),    //版权时间
                 framesPath
         );
         log.setXml_trans_path(trans_path + "/" +"trans_"+new Date().getTime()+"_"+xmlOriginName);
