@@ -717,7 +717,8 @@ public class UploadTool implements UploadToolInterface {
             for(int i=0; i<list.size(); i++){
 
                 UploadItem item = list.get(i);
-                String remoteFileDir = remote_full_path + "/" + replaceBlankToLine(item.getTitle());
+                String remoteFileDir = remote_full_path + "/" + replaceBlankToLine(item.getMd5());
+//                String remoteFileDir = remote_full_path + "/" + replaceBlankToLine(item.getTitle());
                 SftpUtil.mkdir(remoteFileDir, sftp);
 
                 uploadItemsAssociation(item.getPath(), remoteFileDir, sftp, uploadLogRepository , upload_vendor_name,

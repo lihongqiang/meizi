@@ -55,6 +55,7 @@ public class Associator {
                             break;
                         case 5:
                             name = getName4(file);      //电视剧
+                            System.out.println(name);
                             keyFramePath = getKeyFrameDianshiju(file, frameDir);
                             break;
                         default:
@@ -187,8 +188,8 @@ public class Associator {
             doc = builder.build(file);
             Element root = doc.getRootElement();
             //Namespace ns = root.getNamespace();
-            Element nameElemnet=root.getChild("MetaData").getChild("BaseAttributes").getChild("Name");
-            name=nameElemnet.getText();
+            Element nameElemnet=root.getChild("MetaData").getChild("Clip").getChild("ClipFiles").getChild("ClipFile");
+            name=nameElemnet.getAttributeValue("filename");
         } catch (JDOMException e) {
             e.printStackTrace();
         } catch (IOException e) {
