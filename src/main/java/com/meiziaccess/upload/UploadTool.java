@@ -551,7 +551,7 @@ public class UploadTool implements UploadToolInterface {
         String highCodeVideoPath = paths[2];
 
         String keyFramePath = "";
-        if (paths.length == 3){
+        if (paths.length == 4){
             keyFramePath = paths[3];
         }
 
