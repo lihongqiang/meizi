@@ -527,7 +527,7 @@ public class UploadTool implements UploadToolInterface {
      */
     private List<String> getNameList(String names){
         List<String> nameList = new ArrayList<>();
-        if(names == null || names.endsWith("")){
+        if(names == null || names.equals("")){
             return nameList;
         }
         String[] paths = names.split(";");
@@ -547,6 +547,7 @@ public class UploadTool implements UploadToolInterface {
                                  String vendorPath, String uploader_name,  String trans_path,
                                  String play_path, UploadItem item){
 
+        System.out.println("path = " + item.getPath());
         String[] paths = item.getPath().split(",");
 
         String xmlPath = paths[0];
