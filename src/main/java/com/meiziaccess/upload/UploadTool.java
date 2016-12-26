@@ -743,11 +743,11 @@ public class UploadTool implements UploadToolInterface {
 
 
 
-    public static void main(String[] args) {
-        String path = ",,,";
-        String[] paths = path.split(",");
-        for(int i=0; i<paths.length; i++){
-            System.out.println(paths[i]);
-        }
-    }
+//    public static void main(String[] args) {
+//        String path = ",,,";
+//        String[] paths = path.split(",");
+//        for(int i=0; i<paths.length; i++){
+//            System.out.println(paths[i]);
+//        }
+//    }
 }
