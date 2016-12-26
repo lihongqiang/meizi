@@ -424,7 +424,7 @@ public class UploadTool implements UploadToolInterface {
             pathList.add(keyFramePath);
             String pathCombination = StringUtils.join(pathList, ',');
 
-            System.out.println(pathCombination);
+//            System.out.println(pathCombination);
             boolean flag = false;
             if(isNullOrBlank(lowCdeVideoPath) || isNullOrBlank(highCodeVideoPath)){
                 flag = true;
@@ -545,10 +545,16 @@ public class UploadTool implements UploadToolInterface {
                                  String play_path, UploadItem item){
 
         String[] paths = item.getPath().split(",");
+
         String xmlPath = paths[0];
         String lowCodeVideoPath = paths[1];
         String highCodeVideoPath = paths[2];
-        String keyFramePath = paths[3];
+
+        String keyFramePath = "";
+        if (paths.length == 3){
+            keyFramePath = paths[3];
+        }
+
 
         //xml   替换xml文件名中的空格
         List<String> xmlName = getNameList(xmlPath);
@@ -737,20 +743,11 @@ public class UploadTool implements UploadToolInterface {
 
 
 
-//    public static void main(String[] args) {
-////        UploadTool tool = new UploadTool();
-////        List<UploadItem> list = tool.getUploadItems("E:\\program\\???\\data\\???");
-//        String path = "E:\\program\\???\\data\\???";
-//        File file = new File(path);
-//        File[] tempList = file.listFiles();
-//        for (int i = 0; i < tempList.length; i++) {
-//            if (tempList[i].isFile()) {
-//                System.out.println("??     ???" + tempList[i]);
-//            }
-//            if (tempList[i].isDirectory()) {
-//                System.out.println("??????" + tempList[i].getName());
-//                System.out.println("??????" + tempList[i].getPath());
-//            }
-//        }
-//    }
+    public static void main(String[] args) {
+        String path = ",,,";
+        String[] paths = path.split(",");
+        for(int i=0; i<paths.length; i++){
+            System.out.println(paths[i]);
+        }
+    }
 }
