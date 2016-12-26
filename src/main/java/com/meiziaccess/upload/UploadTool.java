@@ -527,6 +527,9 @@ public class UploadTool implements UploadToolInterface {
      */
     private List<String> getNameList(String names){
         List<String> nameList = new ArrayList<>();
+        if(names == null || names.endsWith("")){
+            return nameList;
+        }
         String[] paths = names.split(";");
         for(int i=0; i<paths.length; i++){
             nameList.add(paths[i]);
@@ -555,6 +558,7 @@ public class UploadTool implements UploadToolInterface {
             keyFramePath = paths[3];
         }
 
+        System.out.println("keyFramePath = " + keyFramePath);
 
         //xml   替换xml文件名中的空格
         List<String> xmlName = getNameList(xmlPath);
