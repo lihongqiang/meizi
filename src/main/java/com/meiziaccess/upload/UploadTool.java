@@ -736,7 +736,7 @@ public class UploadTool implements UploadToolInterface {
                         vendorPath, uploader_name,  trans_path, play_path, item);
 
             }
-            SftpUtil.exit(sftp);
+
 
         }  catch (SftpException e) {
             e.printStackTrace();
