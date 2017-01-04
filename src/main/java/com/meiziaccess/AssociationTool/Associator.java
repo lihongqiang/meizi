@@ -88,7 +88,8 @@ public class Associator {
     }
 
     private String associateVideo(String name,String videoDir){
-        name=name.replaceAll(" ","").toLowerCase();
+        while(name.contains(" ")) name=name.replaceAll(" ","");
+        name=name.toLowerCase();
         String rs=new String();
         File root = new File(videoDir);
         File[] files = root.listFiles();
@@ -97,7 +98,8 @@ public class Associator {
             if (file.isDirectory()) {
                rs=associateVideo(name,file.getAbsolutePath());
             } else {
-                String filename = file.getName().toLowerCase().replaceAll(" ","");
+                String filename = file.getName().replace("1/2","（一）").replace("2/2","（二）").toLowerCase();
+                while (filename.contains(" ")) filename=filename.replaceAll(" ","");
                 if (filename.contains(name)) {
                    return file.getAbsolutePath();
                 }
