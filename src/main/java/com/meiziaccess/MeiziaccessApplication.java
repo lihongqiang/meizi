@@ -15,8 +15,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.core.env.SystemEnvironmentPropertySource;
+import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.Null;
 import java.util.*;
 import com.meiziaccess.secure.*;
@@ -24,22 +26,34 @@ import com.meiziaccess.secure.*;
 
 @SpringBootApplication
 @RestController
+@EnableRedisHttpSession
 //@EnableScheduling
 public class MeiziaccessApplication  {
 
-	private int vendor_type = 1;
+//	private int vendor_type = 1;
 
-	@RequestMapping("/authenticate")
-	public Map<String, Object> authenticate(String username, String password){
+	@RequestMapping(value = "/authenticate")
+	public Map<String, Object> authenticate(HttpServletRequest request){
+
 		Map<String, Object> model = new HashMap<String, Object>();
+		if(request.getSession().getAttribute("username") != null){
+			System.out.println("session-get-username=" +  request.getSession().getAttribute("username").toString());
+			model.put("status", true);
+			return model;
+		}
 
+		String username = request.getParameter("username");
+		String password = request.getParameter("password");
 		JSONObject objData = MyHttpUtil.post(username, password);
 		if(objData == null){
 			model.put("status", false);
 		}else{
 			if(objData.getInt("code") ==  200){
 				model.put("status", true);
-				vendor_type = objData.getInt("data");
+				int vendor_type = objData.getInt("data");
+				System.out.println("session-set-username=" + username);
+				request.getSession().setAttribute("username", username);
+				request.getSession().setAttribute("vendor_type", vendor_type);
 				System.out.println(objData.toString());
 			}else{
 				model.put("status", false);
@@ -48,13 +62,26 @@ public class MeiziaccessApplication  {
 		return model;
 	}
 
-	@RequestMapping("/resource")
-	public Map<String, Object> home() {
+	@RequestMapping(value = "/logout")
+	public Map<String, Object> logout(HttpServletRequest request){
 		Map<String, Object> model = new HashMap<String, Object>();
-		model.put("id", UUID.randomUUID().toString());
-		model.put("content", "Hello World");
+		if(request.getSession().getAttribute("username") != null){
+			System.out.println("session-delete-username=" +  request.getSession().getAttribute("username").toString());
+			request.getSession().removeAttribute("username");
+			request.getSession().removeAttribute("vendor_type");
+			return model;
+		}
+		model.put("status", false);
 		return model;
 	}
+
+//	@RequestMapping("/resource")
+//	public Map<String, Object> home() {
+//		Map<String, Object> model = new HashMap<String, Object>();
+//		model.put("id", UUID.randomUUID().toString());
+//		model.put("content", "Hello World");
+//		return model;
+//	}
 
 	@Value("${configure.upload.local_path}")
 	private String upload_local_path;
@@ -63,18 +90,18 @@ public class MeiziaccessApplication  {
 	UploadRepository uploadRepository;
 
 	//一个视频的所有数据在同一个文件夹
-	@RequestMapping("/data-source")
-	@ResponseBody
-	public Map<String, Object> getItems() {
-
-		Map<String, Object> map = new HashMap<>();
-		List<UploadItem> list = UploadTool.getUploadItems(upload_local_path);
-
-		List<UploadItem> uploadList = uploadRepository.findAll();
-		list.removeAll(uploadList);
-		map.put("data", list);
-		return map;
-	}
+//	@RequestMapping("/data-source")
+//	@ResponseBody
+//	public Map<String, Object> getItems() {
+//
+//		Map<String, Object> map = new HashMap<>();
+//		List<UploadItem> list = UploadTool.getUploadItems(upload_local_path);
+//
+//		List<UploadItem> uploadList = uploadRepository.findAll();
+//		list.removeAll(uploadList);
+//		map.put("data", list);
+//		return map;
+//	}
 
 	/**
 	 *
@@ -87,10 +114,21 @@ public class MeiziaccessApplication  {
 	//xml，视频，关键帧在不同文件夹
 	@RequestMapping("/data-source-association")
 	@ResponseBody
-	public Map<String, Object> getItemsAssociation() {
+	public Map<String, Object> getItemsAssociation(HttpServletRequest request) {
 		Map<String, Object> map = new HashMap<>();
+		/* search in file system*/
+		System.out.println("查找路径 " + upload_local_path);
+		Object o = request.getSession().getAttribute("vendor_type");
+		if (o == null){
+			return map;
+		}
+		int vendor_type = Integer.parseInt(o.toString());
 		List<UploadItem> list = UploadTool.getUploadItemsAssociation(upload_local_path, vendor_type);
+
+		/* search in database*/
+		System.out.println("查找数据库 ");
 		List<UploadItem> uploadList = uploadRepository.findAll();
+
 		list.removeAll(uploadList);
 		map.put("data", list);
 		return map;
@@ -126,29 +164,29 @@ public class MeiziaccessApplication  {
 		return true;
 	}
 
-	@RequestMapping(value = "/upload", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
-	@ResponseBody
-	public  Map<String, Object> uploadItems(@RequestBody UploadItem item) {
-		Map<String, Object> map = new HashMap<>();
-		if (item == null){
-			map.put("status", false);
-			return map;
-		}
-
-		List<UploadItem> list = new ArrayList<>();
-		list.add(item);
-
-		UploadToolInterface tool = new UploadTool();
-		tool.uploadItemDirs(upload_remote_path, list, uploadLogRepository, vendor_name, vendor_path, uploader_name, trans_path, play_path);
-		updateDatabase(list);
-
-		map.put("status", true);
-		return map;
-	}
+//	@RequestMapping(value = "/upload", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
+//	@ResponseBody
+//	public  Map<String, Object> uploadItems(@RequestBody UploadItem item) {
+//		Map<String, Object> map = new HashMap<>();
+//		if (item == null){
+//			map.put("status", false);
+//			return map;
+//		}
+//
+//		List<UploadItem> list = new ArrayList<>();
+//		list.add(item);
+//
+//		UploadToolInterface tool = new UploadTool();
+//		tool.uploadItemDirs(upload_remote_path, list, uploadLogRepository, vendor_name, vendor_path, uploader_name, trans_path, play_path);
+//		updateDatabase(list);
+//
+//		map.put("status", true);
+//		return map;
+//	}
 
 	@RequestMapping(value = "/upload-association", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
 	@ResponseBody
-	public  Map<String, Object> uploadItemsAssociation(@RequestBody UploadItem item) {
+	public  Map<String, Object> uploadItemsAssociation(@RequestBody UploadItem item, HttpServletRequest request) {
 
 		Map<String, Object> map = new HashMap<>();
 
@@ -161,7 +199,12 @@ public class MeiziaccessApplication  {
 		list.add(item);
 
 		UploadToolInterface tool = new UploadTool();
-
+		Object o = request.getSession().getAttribute("vendor_type");
+		if(o == null){
+			map.put("status", false);
+			return map;
+		}
+		int vendor_type = Integer.parseInt(o.toString());
 		tool.uploadItemDirsAssociation(upload_remote_path, list, uploadLogRepository, ""+vendor_type, vendor_path, uploader_name, trans_path, play_path);
 		updateDatabase(list);
 

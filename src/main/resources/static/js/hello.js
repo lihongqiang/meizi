@@ -36,29 +36,6 @@ angular.module('hello', [ 'ngRoute' ]).config(function($routeProvider, $httpProv
 					"password": ""
 				};
 
-				//$http.post("http://162.105.16.229/vendor_login", data).success(function(response) {
-				//	if (response.data.status == true) {
-				//		if(response.data[code] == 200){
-				//			$rootScope.authenticated = true;
-				//		}else{
-				//			$rootScope.authenticated = false;
-				//		}
-                //
-				//	} else {
-				//		$rootScope.authenticated = false;
-				//	}
-				//	callback && callback($rootScope.authenticated);
-				//}, function() {
-				//	$rootScope.authenticated = false;
-				//	callback && callback(false);
-				//});
-
-				//$.post("http://162.105.16.229/vendor_login", data,
-				//	function(data){
-				//		alert(data.code); // John
-				//		console.log(data.code); //  2pm
-				//	}, "json");
-
 				$http.get('authenticate', {
 					params : data
 				}).then(function(response) {
@@ -75,9 +52,17 @@ angular.module('hello', [ 'ngRoute' ]).config(function($routeProvider, $httpProv
 
 			}
 
-			authenticate();
-
 			self.credentials = {};
+
+			authenticate(self.credentials, function(authenticated){
+				if(authenticated){
+					console.log("Login succeeded")
+					$location.path("/");
+					$rootScope.authenticated = true;
+				}
+			});
+
+
 			self.login = function() {
 				authenticate(self.credentials, function(authenticated) {
 					if (authenticated) {
@@ -106,12 +91,5 @@ angular.module('hello', [ 'ngRoute' ]).config(function($routeProvider, $httpProv
 
 		}).controller('home', function($http, $rootScope) {
 			var self = this;
-			$http.get('/resource/').then(function(response) {
-				self.greeting = response.data;
-			})
-			$rootScope.upload = function(data){
-				$http.post('/upload', data).finally(function(){
 
-				});
-			}
 });

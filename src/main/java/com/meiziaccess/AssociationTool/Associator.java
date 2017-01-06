@@ -98,7 +98,7 @@ public class Associator {
             if (file.isDirectory()) {
                rs=associateVideo(name,file.getAbsolutePath());
             } else {
-                String filename = file.getName().replace("1/2","（一）").replace("2/2","（二）").toLowerCase();
+                String filename = file.getName().replace("（一）", "1/2").replace("（二）", "2/2").toLowerCase();
                 while (filename.contains(" ")) filename=filename.replaceAll(" ","");
                 if (filename.contains(name)) {
                    return file.getAbsolutePath();

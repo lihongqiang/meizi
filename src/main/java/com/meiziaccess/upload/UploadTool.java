@@ -8,12 +8,10 @@ import com.meiziaccess.AssociationTool.Associator;
 import com.meiziaccess.CommandTool.CommandRunner;
 import com.meiziaccess.CommandTool.SftpUtil;
 import com.meiziaccess.model.UploadItem;
-import com.meiziaccess.task.MyScheduledTasks;
 import com.meiziaccess.uploadModel.UploadLog;
 import com.meiziaccess.uploadModel.UploadLogRepository;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+
 
 import java.io.*;
 import java.math.BigInteger;
@@ -22,7 +20,7 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.concurrent.SynchronousQueue;
+
 
 /**
  * Created by user-u1 on 2016/5/27.
@@ -405,7 +403,7 @@ public class UploadTool implements UploadToolInterface {
     public  static List<UploadItem> getUploadItemsAssociation(String path, int type){
         List<UploadItem> list = new ArrayList<>();
         Associator associator=new Associator();
-        System.out.println(path);
+//        System.out.println(path);
         List<Addresses> rs=associator.getAddresses(path + "/xml",path+"/video",path+"/video",
                 path+"/keyFrame",path+"/xml", type);
 //        List<Addresses> rs=associator.getAddresses(path + "\\xml",path+"\\视频",path+"\\视频",
@@ -453,26 +451,26 @@ public class UploadTool implements UploadToolInterface {
 
             return new BigInteger(1, md.digest()).toString(16);
         } catch (Exception e) {
-            System.out.println("MD5?????????");
+            System.out.println("MD5");
         }
         return "";
     }
 
 
-    public static List<UploadItem> getTestData(){
-        List<UploadItem> list = new ArrayList<>();
-        UploadItem item0 = new UploadItem(false, "??? ??1??", new Date(), 600, 0, 100, "RM", 0, UploadTool.getMD5("??? ??1??"), "");
-        UploadItem item1 = new UploadItem(false, "??? ??2??",  new Date(), 600, 1, 10, "RM", 0, UploadTool.getMD5("??? ??2??"), "");
-        UploadItem item2 = new UploadItem(false, "??? ??3??",  new Date(), 600, 0, 100, "RM", 0, UploadTool.getMD5("??? ??3??"), "");
-        UploadItem item3 = new UploadItem(false, "??? ??4??",  new Date(), 600, 0, 100, "RM", 0, UploadTool.getMD5("??? ??4??"), "");
-        UploadItem item4 = new UploadItem(false, "??? ??5??",  new Date(), 600, 0, 100, "RM", 0, UploadTool.getMD5("??? ??5??"), "");
-        list.add(item0);
-        list.add(item1);
-        list.add(item2);
-        list.add(item3);
-        list.add(item4);
-        return list;
-    }
+//    public static List<UploadItem> getTestData(){
+//        List<UploadItem> list = new ArrayList<>();
+//        UploadItem item0 = new UploadItem(false, "??? ??1??", new Date(), 600, 0, 100, "RM", 0, UploadTool.getMD5("??? ??1??"), "");
+//        UploadItem item1 = new UploadItem(false, "??? ??2??",  new Date(), 600, 1, 10, "RM", 0, UploadTool.getMD5("??? ??2??"), "");
+//        UploadItem item2 = new UploadItem(false, "??? ??3??",  new Date(), 600, 0, 100, "RM", 0, UploadTool.getMD5("??? ??3??"), "");
+//        UploadItem item3 = new UploadItem(false, "??? ??4??",  new Date(), 600, 0, 100, "RM", 0, UploadTool.getMD5("??? ??4??"), "");
+//        UploadItem item4 = new UploadItem(false, "??? ??5??",  new Date(), 600, 0, 100, "RM", 0, UploadTool.getMD5("??? ??5??"), "");
+//        list.add(item0);
+//        list.add(item1);
+//        list.add(item2);
+//        list.add(item3);
+//        list.add(item4);
+//        return list;
+//    }
 
     public  boolean uploadItems( String fileDir,  String remotePath,  ChannelSftp sftp,
                                 UploadLogRepository uploadLogRepository ,String upload_vendor_name,
@@ -737,11 +735,14 @@ public class UploadTool implements UploadToolInterface {
 
             }
 
+            SftpUtil.exit(sftp);
 
         }  catch (SftpException e) {
             e.printStackTrace();
         } catch (JSchException e) {
             e.printStackTrace();
+        } finally {
+
         }
 
         return true;

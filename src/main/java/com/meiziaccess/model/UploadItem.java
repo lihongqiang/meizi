@@ -48,6 +48,9 @@ public class UploadItem {
     @Column(name = "path")
     String path;
 
+    @Column(name = "material_type")
+    String material_type;
+
     public UploadItem() {
         this.upload = true;
         this.title = "";
@@ -59,6 +62,7 @@ public class UploadItem {
         this.copyright_duration = 0;
         this.md5 = "";
         this.path = "";
+        material_type = "";
     }
 
     public UploadItem(String title, String md5, String path) {
@@ -78,7 +82,7 @@ public class UploadItem {
 
 
     public UploadItem(boolean upload, String title, Date upload_time, int duration, int price_type, double price,
-                      String copyright_type, int copyright_duration, String md5, String path) {
+                      String copyright_type, int copyright_duration, String md5, String path, String material_type) {
         this.upload = upload;
         this.title = title;
         this.upload_time = upload_time;
@@ -89,6 +93,7 @@ public class UploadItem {
         this.copyright_duration = copyright_duration;
         this.md5 = md5;
         this.path = path;
+        this.material_type = material_type;
     }
 
     public boolean getUpload() {
@@ -169,6 +174,14 @@ public class UploadItem {
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    public String getMaterial_type() {
+        return material_type;
+    }
+
+    public void setMaterial_type(String material_type) {
+        this.material_type = material_type;
     }
 
     @Override

@@ -57,7 +57,7 @@ public class SftpUtil {
         Session sshSession = null;
         Channel channel = null;
         ChannelSftp sftp = null;
-        String key = host + "," + port + "," + username + "," + password;
+        String key = host + "," + port + "," + username + "," + password + "," + (System.currentTimeMillis());
         if (null == SFTP_CHANNEL_POOL.get(key)) {
             JSch jsch = new JSch();
             jsch.getSession(username, host, port);
