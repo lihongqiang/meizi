@@ -666,6 +666,17 @@ public class UploadTool implements UploadToolInterface {
                 duration = 0;
         }
 
+        String material_type ="";
+        switch (item.getMaterial_type()){
+            case "成片":
+                material_type = "full";
+                break;
+            case "素材":
+                material_type = "material";
+                break;
+            default:
+                material_type = "full";
+        }
         UploadLog log = new UploadLog(
                 upload_vendor_name,
                 new Date(),
@@ -678,7 +689,7 @@ public class UploadTool implements UploadToolInterface {
                 item.getPrice_type(),   //价格类型
                 duration,    //版权时间
                 framesPath,
-                item.getMaterial_type()
+                material_type
         );
         log.setXml_trans_path(trans_path + "/" +"trans_"+new Date().getTime()+"_"+xmlOriginName);
 
