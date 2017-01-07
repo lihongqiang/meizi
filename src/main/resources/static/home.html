@@ -29,6 +29,7 @@
 //                { data: 'duration' },
                 { data: 'price_type' },
                 { data: 'price' },
+                { data: 'material_type' },
                 { data: 'copyright_type' },
                 { data: 'copyright_duration' },
             ],
@@ -63,6 +64,16 @@
                 {
                     "targets": 4,
                     "orderable": false,
+                    "data": "material_type",
+                    "render": function ( data, type, full, meta) {
+                        return '<select name= "material_type" class="form-control" id="material_type"> \
+                                <option>成片</option> \
+                                <option>素材</option> \
+                                </select>';
+                    }
+                },{
+                    "targets": 5,
+                    "orderable": false,
                     "data": "copyright_type",
                     "render": function ( data, type, full, meta) {
                         return '<select name= "copyright_type" class="form-control" id="copyright_type"> \
@@ -72,7 +83,7 @@
                     }
                 },
                 {
-                    "targets": 5,
+                    "targets": 6,
                     "orderable": false,
                     "data": "copyright_duration",
                     "render": function ( data, type, full, meta) {
@@ -154,6 +165,7 @@
             var isOk = 0;
             alert("正在上传,请稍后");
             $('#button').prop('disabled', true);
+
             rows.every( function ( rowIdx, tableLoop, rowLoop ) {
 
                 var d = this.data();
@@ -183,6 +195,12 @@
                 this.invalidate(); // invalidate the data DataTables has cached for this row
             } );
 //            rows.remove().draw(false);
+        });
+        $('#upload_data tbody').on('change', 'tr select[name=material_type]', function(){
+            var material_type = $(this).children('option:selected').val();
+            var $row = table.row($(this).parents('tr'));
+            $row.data()['material_type'] = material_type;
+            $row.draw();
         });
 
         $('#upload_data tbody').on('change', 'tr select[name=copyright_type]', function(){
@@ -296,6 +314,7 @@
                 <!--<th>内容简介</th>-->
                 <th>价格类型</th>
                 <th>单价</th>
+                <th>素材类别</th>
                 <th>版权类型</th>
                 <th>版权期限</th>
                 <!--<th><input type="checkbox" id="checkAll" class="checkAll"/></th>-->

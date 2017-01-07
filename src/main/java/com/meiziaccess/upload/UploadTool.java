@@ -151,6 +151,7 @@ public class UploadTool implements UploadToolInterface {
                                     "RF",
                                     1,
                                     5,
+                                    "",
                                     "");
         //xml??????
         log.setXml_trans_path(trans_path + "/" +"trans_"+new Date().getTime()+"_"+xmlName);
@@ -640,7 +641,31 @@ public class UploadTool implements UploadToolInterface {
 //        String framesPath = StringUtils.join(frames, ',');
         String framesPath = remoteKeyFramesPath;
 
-        //???????????
+        //版权时间转换成天
+        int duration = 0;
+        switch (item.getCopyright_duration()){
+            case 0:
+                duration = 182;
+                break;
+            case 1:
+                duration = 365;
+                break;
+            case 2:
+                duration = 365*2;
+                break;
+            case 3:
+                duration = 365*3;
+                break;
+            case 4:
+                duration = 365*5;
+                break;
+            case 5:
+                duration = -1;
+                break;
+            default:
+                duration = 0;
+        }
+
         UploadLog log = new UploadLog(
                 upload_vendor_name,
                 new Date(),
@@ -651,8 +676,9 @@ public class UploadTool implements UploadToolInterface {
                 item.getPrice(),   //价格
                 item.getCopyright_type(),   //版权类型
                 item.getPrice_type(),   //价格类型
-                item.getCopyright_duration(),    //版权时间
-                framesPath
+                duration,    //版权时间
+                framesPath,
+                item.getMaterial_type()
         );
         log.setXml_trans_path(trans_path + "/" +"trans_"+new Date().getTime()+"_"+xmlOriginName);
 

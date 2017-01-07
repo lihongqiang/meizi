@@ -40,7 +40,7 @@ public class UploadItem {
     String copyright_type;     //RF  RM
 
     @Column(name = "copyright_duration")
-    int copyright_duration;   //0:6个月  1:一年  2:两年    3:三年   4::五年   5:长期
+    int copyright_duration;   //0:6个月  1:一年  2:两年    3:三年   4::五年   5:长期  装换成天数
 
     @Column(name = "md5")
     String md5;
@@ -49,7 +49,7 @@ public class UploadItem {
     String path;
 
     @Column(name = "material_type")
-    String material_type;
+    String material_type;           //成片 素材
 
     public UploadItem() {
         this.upload = true;
@@ -62,7 +62,7 @@ public class UploadItem {
         this.copyright_duration = 0;
         this.md5 = "";
         this.path = "";
-        material_type = "";
+        this.material_type = "成片";
     }
 
     public UploadItem(String title, String md5, String path) {
@@ -77,6 +77,7 @@ public class UploadItem {
         this.price_type = 0;
         this.copyright_type = "RM";
         this.copyright_duration = 0;
+        this.material_type = "成片";
     }
 
 

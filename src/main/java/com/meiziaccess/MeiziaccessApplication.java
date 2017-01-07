@@ -204,10 +204,12 @@ public class MeiziaccessApplication  {
 			map.put("status", false);
 			return map;
 		}
+
+		//先将上传的数据写入本地数据库，不在页面显示
+		updateDatabase(list);
+		//然后上传到远程服务器
 		int vendor_type = Integer.parseInt(o.toString());
 		tool.uploadItemDirsAssociation(upload_remote_path, list, uploadLogRepository, ""+vendor_type, vendor_path, uploader_name, trans_path, play_path);
-		updateDatabase(list);
-
 		map.put("status", true);
 		return map;
 	}

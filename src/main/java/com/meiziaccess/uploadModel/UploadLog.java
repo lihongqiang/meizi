@@ -17,7 +17,7 @@ public class UploadLog {
     public UploadLog(String vendor_name, Date upload_time, String uploader_name,
                      String xml_upload_path, String video_upload_path, String vendor_path,
                      double video_price, String video_copyright, int video_price_type, int video_copyright_duration,
-                     String frame_extract_path) {
+                     String frame_extract_path, String material_type) {
         this.vendor_name = vendor_name;
         this.upload_time = upload_time;
         this.uploader_name = uploader_name;
@@ -29,6 +29,7 @@ public class UploadLog {
         this.video_price_type = video_price_type;
         this.video_copyright_duration = video_copyright_duration;
         this.frame_extract_path = frame_extract_path;
+        this.material_type = material_type;
     }
 
     public String toString(){
@@ -82,6 +83,9 @@ public class UploadLog {
 
     @Column(name = "video_copyright_duration")
     private int video_copyright_duration;
+
+    @Column(name = "material_type")
+    private String material_type;
 
     public String getVendor_name() {
         return vendor_name;
@@ -193,5 +197,17 @@ public class UploadLog {
 
     public void setVideo_copyright_duration(int video_copyright_duration) {
         this.video_copyright_duration = video_copyright_duration;
+    }
+
+    public int getVideo_price_type() {
+        return video_price_type;
+    }
+
+    public String getMaterial_type() {
+        return material_type;
+    }
+
+    public void setMaterial_type(String material_type) {
+        this.material_type = material_type;
     }
 }
